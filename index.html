@@ -389,6 +389,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .akabanner.noimg .bgblur{display:none}
 .akabanner.noimg{aspect-ratio:auto;min-height:140px;background:repeating-linear-gradient(135deg,#17110b 0 18px,#22180e 18px 36px)}
 .akashade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,0) 60%)}
+.akabanner:not(:has(.akaplay)) .akashade{display:none}
 .akaplay{position:relative;margin:0 0 20px 20px;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;background:var(--bc,#AE2A1F);color:#fff;font-weight:800;font-size:16px;padding:8px 20px 8px 8px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .akaplay i{width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center}
 .akaplay i svg{width:12px;height:12px;fill:var(--bc,#AE2A1F);margin-left:2px}
@@ -401,7 +402,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .th-screen{position:relative;width:var(--thw);aspect-ratio:16/9;max-width:100%;background:#000;border-radius:6px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08)}
 .th-screen video,.th-screen iframe,#thYT{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
 .th-screen iframe{pointer-events:none}
-.th-screen #thMp4{object-fit:fill;max-width:none;z-index:1}
+.th-screen #thMp4{object-fit:fill;max-width:none;z-index:1;transition:none}
 .th-cur{position:absolute;top:0;bottom:0;width:50.5%;z-index:2;background:repeating-linear-gradient(90deg,#3a0d0a 0 22px,#5a1611 22px 30px,#2a0806 30px 44px);box-shadow:inset 0 -60px 80px rgba(0,0,0,.6);transition:transform 1.1s cubic-bezier(.7,0,.3,1)}
 .th-cur.l{left:0}.th-cur.r{right:0}
 .theatre.open .th-cur.l{transform:translateX(-101%)}
@@ -1555,8 +1556,9 @@ function renderOrgs(){
     body=`<div class="osec"><h3>Members in the book · ${ids.length}</h3><div class="grid">${ids.map(id=>orgCard(BY[id])).join("")}</div></div>`;
   }
   const bn=ORG_BANNERS[o.id];
-  const akaBanner=bn?`<div class="akabanner${bn.fit==="contain"?" fitc":""}" id="akaBanner" style="--bc:${bn.color}">${bn.fit==="contain"?`<img src="${bn.img}" alt="" class="bgblur" aria-hidden="true">`:""}<img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${thAvail[bn.vid]?`<button type="button" class="akaplay" data-playvid="${bn.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(bn.label)}</button>`:""}</div>`:"";
-  if(bn)setTimeout(()=>{const im=$("#akaImg");if(!im)return;const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]){b.classList.add("noimg");b.querySelectorAll("img").forEach(x=>x.remove())}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
+  const akaBanner=bn?`<div class="akabanner${bn.fit==="contain"?" fitc":""}" id="akaBanner" style="--bc:${bn.color};${bn.bg?"background:"+bn.bg:""}">${bn.fit==="contain"&&!bn.bg?`<img src="${bn.img}" alt="" class="bgblur" aria-hidden="true">`:""}<img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${thAvail[bn.vid]?`<button type="button" class="akaplay" data-playvid="${bn.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(bn.label)}</button>`:""}</div>`:"";
+  if(bn)setTimeout(()=>{const im=$("#akaImg");if(!im)return;
+    if(bn.fit==="auto"){const decide=()=>{if(!im.naturalWidth)return;const b=$("#akaBanner");const r=(im.naturalWidth/im.naturalHeight)/(b.clientWidth/b.clientHeight);if(r<.8||r>1.25){b.classList.add("fitc");const g=document.createElement("img");g.src=bn.img;g.alt="";g.className="bgblur";g.setAttribute("aria-hidden","true");b.prepend(g)}};if(im.complete)decide();else im.addEventListener("load",decide,{once:true})}const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]){b.classList.add("noimg");b.querySelectorAll("img").forEach(x=>x.remove())}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
   $("#orgBody").innerHTML=akaBanner+`<div class="ohero ${o.id==="akatsuki"?"aka":""}"><span class="oseal" lang="ja">${o.seal}</span><div><p class="kicker">${esc(o.tag)}</p><h2>${esc(o.name)} <span lang="ja">${o.jp}</span></h2><p>${esc(o.desc)}</p></div></div>${body}`;
 }
 $("#orgNav").addEventListener("click",e=>{const b=e.target.closest("[data-org]");if(!b)return;st.org=b.dataset.org;renderOrgs();setHash(viewHash());window.scrollTo({top:0,behavior:REDUCED?"auto":"smooth"})});
@@ -1924,11 +1926,13 @@ const VOLUME_DEFAULT=50; /* medium sound */
 const THEATRE={
   opening:{title:"The opening",jp:"オープニング",file:"intro.mp4",yt:INTRO_VIDEO_ID},
   akatsuki:{title:"Akatsuki intro",jp:"暁",file:"akatsuki.mp4",yt:null},
-  kage:{title:"The Five Kage",jp:"五影",file:"kage.mp4",yt:null}
+  kage:{title:"The Five Kage",jp:"五影",file:"kage.mp4",yt:null},
+  anbu:{title:"ANBU",jp:"暗部",file:"anbu.mp4",yt:null}
 };
 /* Organisation banners: photo in img/<name>.webp, video in the file above */
 const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch the Akatsuki intro",color:"#AE2A1F"},
-  kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",fit:"contain"}};
+  kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",fit:"contain"},
+  anbu:{img:"img/anbu.webp",vid:"anbu",label:"Watch the ANBU video",color:"#3E4A5C",fit:"contain",bg:"#ffffff"}};
 const HOSTED=!/claude/.test(location.hostname)&&!window.claude&&location.protocol!=="about:";
 const thAvail={};let ytPlayer=null,ytLoading=null,thCur=null,thKind=null,thTick=null,thVol=VOLUME_DEFAULT;
 function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)return ytLoading;
@@ -1980,29 +1984,41 @@ async function openTheatre(key){
 let thReturn=null,thCloseT=null;
 /* Every video fills the whole 16:9 screen. Black bars baked into a video file are found
    by looking at a few frames and trimmed, so the picture itself covers the screen. */
-let vBox=null,vSampleT=[];
-function sampleBars(){const v=$("#thMp4");if(!v.videoWidth||v.readyState<2)return;
-  const w=160,h=Math.max(20,Math.round(160*v.videoHeight/v.videoWidth));const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
-  let d;try{x.drawImage(v,0,0,w,h);d=x.getImageData(0,0,w,h).data}catch(e){return}
+let vBox=null,vSampleT=[],vFound=false,vWatch=0;
+function sampleBars(){const v=$("#thMp4");if(!v.videoWidth||v.readyState<2)return false;
+  const w=160,h=Math.max(20,Math.round(160*v.videoHeight/v.videoWidth));const c=sampleBars.c||(sampleBars.c=document.createElement("canvas"));c.width=w;c.height=h;const x=c.getContext("2d",{willReadFrequently:true});
+  let d;try{x.drawImage(v,0,0,w,h);d=x.getImageData(0,0,w,h).data}catch(e){return false}
   const lit=(i)=>(d[i]*.3+d[i+1]*.59+d[i+2]*.11)>26;
   const rowOn=y=>{let n=0;for(let i=0;i<w;i++)if(lit((y*w+i)*4))n++;return n>w*.04};
   const colOn=xx=>{let n=0;for(let j=0;j<h;j++)if(lit((j*w+xx)*4))n++;return n>h*.04};
   let y0=0,y1=h-1,x0=0,x1=w-1;while(y0<h&&!rowOn(y0))y0++;while(y1>y0&&!rowOn(y1))y1--;while(x0<w&&!colOn(x0))x0++;while(x1>x0&&!colOn(x1))x1--;
-  if(y0>=y1||x0>=x1)return;const box=[x0/w,y0/h,(x1+1)/w,(y1+1)/h];
-  if((box[2]-box[0])*(box[3]-box[1])<.12)return; /* mostly dark frame: ignore */
+  if(y0>=y1||x0>=x1)return false;const box=[x0/w,y0/h,(x1+1)/w,(y1+1)/h];
+  if((box[2]-box[0])*(box[3]-box[1])<.12)return false; /* mostly dark frame: ignore */
   vBox=vBox?[Math.min(vBox[0],box[0]),Math.min(vBox[1],box[1]),Math.max(vBox[2],box[2]),Math.max(vBox[3],box[3])]:box;
-  layoutVideo();}
+  try{localStorage.setItem("bb-box-"+v.getAttribute("src"),JSON.stringify(vBox))}catch(e){}
+  layoutVideo();return true}
 function layoutVideo(){const v=$("#thMp4");if(!v.videoWidth)return;const scr=$(".th-screen").getBoundingClientRect(),FW=scr.width,FH=scr.height;
   let b=vBox||[0,0,1,1];if(b[0]<.02&&b[1]<.02&&b[2]>.98&&b[3]>.98)b=[0,0,1,1];
   const cw=(b[2]-b[0])*v.videoWidth,ch=(b[3]-b[1])*v.videoHeight,k=Math.max(FW/cw,FH/ch);
   const DW=v.videoWidth*k,DH=v.videoHeight*k,cx=(b[0]+b[2])/2*DW,cy=(b[1]+b[3])/2*DH;
   Object.assign(v.style,{width:DW+"px",height:DH+"px",left:(FW/2-cx)+"px",top:(FH/2-cy)+"px",right:"auto",bottom:"auto"});}
-function fitVideo(){vBox=null;vSampleT.forEach(clearTimeout);vSampleT=[];const v=$("#thMp4");
-  layoutVideo();[600,1500,3000,5000,8000,12000].forEach(t=>vSampleT.push(setTimeout(()=>{if(!$("#theatre").hidden&&!v.hidden)sampleBars()},t)));}
+function showVideo(){$("#thMp4").style.opacity="1"}
+function fitVideo(){const v=$("#thMp4");vBox=null;vFound=false;vSampleT.forEach(clearTimeout);vSampleT=[];cancelWatch();
+  /* a video seen before opens already trimmed */
+  try{const c=JSON.parse(localStorage.getItem("bb-box-"+v.getAttribute("src"))||"null");if(Array.isArray(c)&&c.length===4){vBox=c;vFound=true}}catch(e){}
+  layoutVideo();
+  if(vFound){showVideo()}else{v.style.opacity="0";vSampleT.push(setTimeout(()=>{vFound=true;showVideo()},2000))}
+  /* look at frames as they arrive until the picture is found */
+  const tick=()=>{if($("#theatre").hidden||v.hidden)return;
+    if(!vFound){if(sampleBars()){vFound=true;showVideo()}}
+    if(!vFound)vWatch=v.requestVideoFrameCallback?v.requestVideoFrameCallback(tick):setTimeout(tick,60)};
+  tick();
+  [1500,4000,9000].forEach(t=>vSampleT.push(setTimeout(()=>{if(!$("#theatre").hidden&&!v.hidden)sampleBars()},t)));}
+function cancelWatch(){const v=$("#thMp4");try{if(v.cancelVideoFrameCallback&&vWatch)v.cancelVideoFrameCallback(vWatch);else clearTimeout(vWatch)}catch(e){}vWatch=0}
 window.addEventListener("resize",()=>{if(!$("#theatre").hidden)layoutVideo()});
 document.addEventListener("fullscreenchange",()=>setTimeout(layoutVideo,120));
 function closeTheatre(){
-  const th=$("#theatre");if(th.hidden)return;clearInterval(thTick);stopAll();vSampleT.forEach(clearTimeout);
+  const th=$("#theatre");if(th.hidden)return;clearInterval(thTick);stopAll();vSampleT.forEach(clearTimeout);cancelWatch();
   try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document)}catch(e){}
   th.classList.remove("open");clearTimeout(thCloseT);thCloseT=setTimeout(()=>{th.classList.remove("on");thCloseT=setTimeout(()=>{th.hidden=true},350)},REDUCED?0:700);
   if(thReturn&&thReturn.focus)thReturn.focus({preventScroll:true});
