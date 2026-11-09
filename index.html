@@ -384,6 +384,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .th-tabs .chip[aria-pressed="true"]{background:#ee7c2e;color:#140b04}
 .akabanner{position:relative;margin-top:24px;border-radius:12px;overflow:hidden;aspect-ratio:21/8;max-width:100%;background:#120808;display:flex;align-items:flex-end;justify-content:flex-start}
 .akabanner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%}
+.akabanner .bgblur{filter:blur(26px) brightness(.5) saturate(1.2);transform:scale(1.2)}
+.akabanner.fitc #akaImg{object-fit:contain;object-position:50% 50%}
+.akabanner.noimg .bgblur{display:none}
 .akabanner.noimg{aspect-ratio:auto;min-height:140px;background:repeating-linear-gradient(135deg,#17110b 0 18px,#22180e 18px 36px)}
 .akashade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,0) 60%)}
 .akaplay{position:relative;margin:0 0 20px 20px;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;background:var(--bc,#AE2A1F);color:#fff;font-weight:800;font-size:16px;padding:8px 20px 8px 8px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.5)}
@@ -398,6 +401,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .th-screen{position:relative;width:var(--thw);aspect-ratio:16/9;max-width:100%;background:#000;border-radius:6px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08)}
 .th-screen video,.th-screen iframe,#thYT{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
 .th-screen iframe{pointer-events:none}
+.th-screen video{object-fit:cover;z-index:1}
+.th-screen video.fitc{object-fit:contain;background:transparent}
+#thBlur{position:absolute;inset:0;width:100%;height:100%;filter:blur(18px) brightness(.55) saturate(1.2);transform:scale(1.15);z-index:0}
 .th-cur{position:absolute;top:0;bottom:0;width:50.5%;z-index:2;background:repeating-linear-gradient(90deg,#3a0d0a 0 22px,#5a1611 22px 30px,#2a0806 30px 44px);box-shadow:inset 0 -60px 80px rgba(0,0,0,.6);transition:transform 1.1s cubic-bezier(.7,0,.3,1)}
 .th-cur.l{left:0}.th-cur.r{right:0}
 .theatre.open .th-cur.l{transform:translateX(-101%)}
@@ -497,7 +503,7 @@ button,input,select,textarea{font:inherit;color:inherit}
     <div class="th-now"><b id="thTitle"></b> <span lang="ja" id="thJp"></span></div>
     <div class="th-tabs" id="thTabs"></div>
   </div>
-  <div class="th-screen"><div id="thYT" hidden></div><video id="thMp4" playsinline preload="none" hidden></video>
+  <div class="th-screen"><canvas id="thBlur" width="64" height="36" aria-hidden="true" hidden></canvas><div id="thYT" hidden></div><video id="thMp4" playsinline preload="none" hidden></video>
     <div class="th-cur l" aria-hidden="true"></div><div class="th-cur r" aria-hidden="true"></div><div class="th-msg" id="thMsg" hidden></div></div>
   <div class="th-bar">
     <button type="button" id="thPlay"><svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg>Play</button>
@@ -1551,8 +1557,8 @@ function renderOrgs(){
     body=`<div class="osec"><h3>Members in the book · ${ids.length}</h3><div class="grid">${ids.map(id=>orgCard(BY[id])).join("")}</div></div>`;
   }
   const bn=ORG_BANNERS[o.id];
-  const akaBanner=bn?`<div class="akabanner" id="akaBanner" style="--bc:${bn.color};${bn.ar?"aspect-ratio:"+bn.ar:""}"><img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${thAvail[bn.vid]?`<button type="button" class="akaplay" data-playvid="${bn.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(bn.label)}</button>`:""}</div>`:"";
-  if(bn)setTimeout(()=>{const im=$("#akaImg");if(!im)return;const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]){b.classList.add("noimg");im.remove()}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
+  const akaBanner=bn?`<div class="akabanner${bn.fit==="contain"?" fitc":""}" id="akaBanner" style="--bc:${bn.color}">${bn.fit==="contain"?`<img src="${bn.img}" alt="" class="bgblur" aria-hidden="true">`:""}<img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${thAvail[bn.vid]?`<button type="button" class="akaplay" data-playvid="${bn.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(bn.label)}</button>`:""}</div>`:"";
+  if(bn)setTimeout(()=>{const im=$("#akaImg");if(!im)return;const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]){b.classList.add("noimg");b.querySelectorAll("img").forEach(x=>x.remove())}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
   $("#orgBody").innerHTML=akaBanner+`<div class="ohero ${o.id==="akatsuki"?"aka":""}"><span class="oseal" lang="ja">${o.seal}</span><div><p class="kicker">${esc(o.tag)}</p><h2>${esc(o.name)} <span lang="ja">${o.jp}</span></h2><p>${esc(o.desc)}</p></div></div>${body}`;
 }
 $("#orgNav").addEventListener("click",e=>{const b=e.target.closest("[data-org]");if(!b)return;st.org=b.dataset.org;renderOrgs();setHash(viewHash());window.scrollTo({top:0,behavior:REDUCED?"auto":"smooth"})});
@@ -1924,7 +1930,7 @@ const THEATRE={
 };
 /* Organisation banners: photo in img/<name>.webp, video in the file above */
 const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch the Akatsuki intro",color:"#AE2A1F"},
-  kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",ar:"3/2"}};
+  kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",fit:"contain"}};
 const HOSTED=!/claude/.test(location.hostname)&&!window.claude&&location.protocol!=="about:";
 const thAvail={};let ytPlayer=null,ytLoading=null,thCur=null,thKind=null,thTick=null,thVol=VOLUME_DEFAULT;
 function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)return ytLoading;
@@ -1953,13 +1959,14 @@ async function openTheatre(key){
   if(!thKind){thMsg("This video has not been added yet.");return}
   if(thKind==="mp4"){const v=$("#thMp4");v.hidden=false;$("#thYT").hidden=true;
     if(v.getAttribute("src")!==vid.file){v.src=vid.file;v.load()}
+    v.onloadedmetadata=fitVideo;if(v.readyState>=1)fitVideo();
     v.onended=closeTheatre;v.onplay=()=>thState(true);v.onpause=()=>thState(false);v.onerror=()=>thMsg("The video could not be played.");
     try{v.currentTime=0}catch(e){}
     v.volume=thVol/100;v.muted=false;
     setTimeout(()=>th.classList.add("open"),fresh?150:0);
     v.play().catch(()=>{thMsg("Press Play to start the video.")});
   }else{
-    $("#thMp4").hidden=true;$("#thYT").hidden=false;
+    $("#thMp4").hidden=true;$("#thBlur").hidden=true;$("#thYT").hidden=false;
     try{await loadYT()}catch(e){thMsg("The video could not be loaded. Check your internet connection.");return}
     const go=()=>{try{ytPlayer.seekTo(0);ytPlayer.unMute();ytPlayer.setVolume(thVol);ytPlayer.playVideo()}catch(e){}};
     if(ytPlayer){setTimeout(()=>th.classList.add("open"),150);go()}
@@ -1973,6 +1980,13 @@ async function openTheatre(key){
     $("#thTime").textContent=d?`${fmt(c)} / ${fmt(d)}`:""},500);
 }
 let thReturn=null;
+/* Every video fills the same 16:9 screen. Close shapes (4:3 to 21:9) fill it edge to edge;
+   very different shapes (like a phone video) sit in the middle on a blurred copy of themselves. */
+let blurRaf=0;
+function fitVideo(){const v=$("#thMp4"),c=$("#thBlur");if(!v.videoWidth)return;
+  const r=(v.videoWidth/v.videoHeight)/(16/9),fill=r>0.74&&r<1.35;
+  v.classList.toggle("fitc",!fill);c.hidden=fill;cancelAnimationFrame(blurRaf);
+  if(!fill){const x=c.getContext("2d");const draw=()=>{if($("#theatre").hidden||v.classList.contains("fitc")===false)return;try{x.drawImage(v,0,0,c.width,c.height)}catch(e){}blurRaf=requestAnimationFrame(draw)};draw()}}
 function closeTheatre(){
   const th=$("#theatre");if(th.hidden)return;clearInterval(thTick);stopAll();
   try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document)}catch(e){}
