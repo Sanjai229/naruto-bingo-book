@@ -384,12 +384,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .th-tabs .chip[aria-pressed="true"]{background:#ee7c2e;color:#140b04}
 .akabanner{position:relative;margin-top:24px;border-radius:12px;overflow:hidden;aspect-ratio:21/8;max-width:100%;background:#120808;display:flex;align-items:flex-end;justify-content:flex-start}
 .akabanner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%}
-.akabanner.noimg{aspect-ratio:auto;min-height:140px;background:repeating-linear-gradient(135deg,#1a0707 0 18px,#240a0a 18px 36px)}
+.akabanner.noimg{aspect-ratio:auto;min-height:140px;background:repeating-linear-gradient(135deg,#17110b 0 18px,#22180e 18px 36px)}
 .akashade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,0) 60%)}
-.akaplay{position:relative;margin:0 0 20px 20px;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;background:#AE2A1F;color:#fff;font-weight:800;font-size:16px;padding:8px 20px 8px 8px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.akaplay{position:relative;margin:0 0 20px 20px;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;background:var(--bc,#AE2A1F);color:#fff;font-weight:800;font-size:16px;padding:8px 20px 8px 8px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .akaplay i{width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center}
-.akaplay i svg{width:12px;height:12px;fill:#AE2A1F;margin-left:2px}
-.akaplay:hover{background:#c33224}
+.akaplay i svg{width:12px;height:12px;fill:var(--bc,#AE2A1F);margin-left:2px}
+.akaplay:hover{filter:brightness(1.12)}
 @media (max-width:640px){.akabanner{aspect-ratio:16/9}.akaplay{margin:0 0 14px 14px;font-size:14px}}
 .th-top{display:flex;align-items:center;gap:12px 18px;width:var(--thw);flex-wrap:wrap;min-height:40px;padding-right:96px}
 .th-head{display:flex;align-items:baseline;gap:10px;font-family:var(--display);font-weight:800}
@@ -1514,7 +1514,6 @@ function renderOrgs(){
   document.querySelectorAll("[data-org]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.org===o.id));
   let body="";
   if(o.id==="akatsuki"){
-    setTimeout(()=>{const im=$("#akaImg");if(!im)return;const fail=()=>{const bn=$("#akaBanner");if(!bn)return;if(thAvail.akatsuki){bn.classList.add("noimg");im.remove()}else bn.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
     body=`<div class="ofacts">
         <div><span>Founded in</span><b>Hidden Rain</b></div>
         <div><span>Founders</span><b>Yahiko, Nagato, Konan</b></div>
@@ -1551,7 +1550,9 @@ function renderOrgs(){
     const ids=o.members().filter(id=>BY[id]);
     body=`<div class="osec"><h3>Members in the book · ${ids.length}</h3><div class="grid">${ids.map(id=>orgCard(BY[id])).join("")}</div></div>`;
   }
-  const akaBanner=o.id==="akatsuki"?`<div class="akabanner" id="akaBanner"><img src="img/akatsuki.webp" alt="" id="akaImg"><div class="akashade"></div>${thAvail.akatsuki?`<button type="button" class="akaplay" data-playvid="akatsuki"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>Watch the Akatsuki intro</button>`:""}</div>`:"";
+  const bn=ORG_BANNERS[o.id];
+  const akaBanner=bn?`<div class="akabanner" id="akaBanner" style="--bc:${bn.color};${bn.ar?"aspect-ratio:"+bn.ar:""}"><img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${thAvail[bn.vid]?`<button type="button" class="akaplay" data-playvid="${bn.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(bn.label)}</button>`:""}</div>`:"";
+  if(bn)setTimeout(()=>{const im=$("#akaImg");if(!im)return;const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]){b.classList.add("noimg");im.remove()}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
   $("#orgBody").innerHTML=akaBanner+`<div class="ohero ${o.id==="akatsuki"?"aka":""}"><span class="oseal" lang="ja">${o.seal}</span><div><p class="kicker">${esc(o.tag)}</p><h2>${esc(o.name)} <span lang="ja">${o.jp}</span></h2><p>${esc(o.desc)}</p></div></div>${body}`;
 }
 $("#orgNav").addEventListener("click",e=>{const b=e.target.closest("[data-org]");if(!b)return;st.org=b.dataset.org;renderOrgs();setHash(viewHash());window.scrollTo({top:0,behavior:REDUCED?"auto":"smooth"})});
@@ -1918,8 +1919,12 @@ const INTRO_VIDEO_ID="gX9WX_NP5Ug";
 const VOLUME_DEFAULT=50; /* medium sound */
 const THEATRE={
   opening:{title:"The opening",jp:"オープニング",file:"intro.mp4",yt:INTRO_VIDEO_ID},
-  akatsuki:{title:"Akatsuki intro",jp:"暁",file:"akatsuki.mp4",yt:null}
+  akatsuki:{title:"Akatsuki intro",jp:"暁",file:"akatsuki.mp4",yt:null},
+  kage:{title:"The Five Kage",jp:"五影",file:"kage.mp4",yt:null}
 };
+/* Organisation banners: photo in img/<name>.webp, video in the file above */
+const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch the Akatsuki intro",color:"#AE2A1F"},
+  kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",ar:"3/2"}};
 const HOSTED=!/claude/.test(location.hostname)&&!window.claude&&location.protocol!=="about:";
 const thAvail={};let ytPlayer=null,ytLoading=null,thCur=null,thKind=null,thTick=null,thVol=VOLUME_DEFAULT;
 function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)return ytLoading;
