@@ -372,8 +372,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .io-video #ytIntro,.io-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .intro-ov.vid .io-lines,.intro-ov.vid .io-brush,.intro-ov.vid .io-stage{display:none}
 .intro-ov.vid .io-skip{z-index:2}
-.io-sound{position:absolute;z-index:2;left:50%;bottom:max(24px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;background:#ee7c2e;color:#140b04;font-weight:800;padding:11px 20px;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.5)}
-.io-sound svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.io-video iframe{pointer-events:none}
+.io-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.io-start{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;background:radial-gradient(circle at 50% 45%,#1b1f2a,#0b0d12 70%);padding:24px}
+.io-start-k{font-family:var(--display);font-weight:800;font-size:clamp(90px,18vw,170px);line-height:1;color:#f3f1ea}
+.io-start h2{font-family:var(--display);font-weight:800;font-size:clamp(30px,6vw,56px);margin:0;color:#f3f1ea}
+.io-start p{margin:0;color:#cfcab9;font-size:13px}
+.io-start .io-go{display:inline-flex;align-items:center;gap:8px;animation:ioPulse 2s ease-out 1s infinite}
+.io-start .io-go svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .intro-ov.still *{animation:none!important}
 .intro-ov.still .io-shin,.intro-ov.still .io-title,.intro-ov.still .io-nations,.intro-ov.still .io-stats,.intro-ov.still .io-brush{display:none}
 .intro-ov.still .io-end{opacity:1;pointer-events:auto}
@@ -449,8 +455,13 @@ button,input,select,textarea{font:inherit;color:inherit}
       <label class="io-never"><input type="checkbox" id="ioNever"> Don't show the intro again</label>
     </div>
   </div>
-  <div class="io-video" id="ioVideo" hidden><div id="ytIntro"></div>
-    <button type="button" class="io-sound" id="ioSound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Turn sound on</button></div>
+  <div class="io-video" id="ioVideo" hidden><div id="ytIntro"></div><video id="ioMp4" playsinline preload="auto" hidden></video>
+    <div class="io-start" id="ioStart">
+      <div class="io-start-k" lang="ja" aria-hidden="true">忍</div>
+      <h2>Naruto Bingo Book</h2>
+      <button type="button" class="io-go" id="ioStartBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg>Start the opening</button>
+      <p>Plays with sound</p>
+    </div></div>
   <button type="button" class="io-skip" id="ioSkip">Skip intro</button>
 </div>
 
@@ -1860,18 +1871,33 @@ let ytPlayer=null,ytLoading=null;
 function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)return ytLoading;
   ytLoading=new Promise((res,rej)=>{const t=setTimeout(()=>rej(),8000);window.onYouTubeIframeAPIReady=()=>{clearTimeout(t);res()};
     const sc=document.createElement("script");sc.src="https://www.youtube.com/iframe_api";sc.onerror=()=>{clearTimeout(t);rej()};document.head.appendChild(sc)});return ytLoading}
-function videoFailed(){const ov=$("#introOv");ov.classList.remove("vid");$("#ioVideo").hidden=true;try{if(ytPlayer)ytPlayer.stopVideo()}catch(e){}
+function videoFailed(){const ov=$("#introOv");if(ov.hidden)return;ov.classList.remove("vid");$("#ioVideo").hidden=true;try{if(ytPlayer)ytPlayer.stopVideo()}catch(e){}try{$("#ioMp4").pause()}catch(e){}
   ov.hidden=true;void ov.offsetWidth;ov.hidden=false;startAnimTimers()}
+const INTRO_VOLUME=50; /* medium sound */
+let vidKind=null,ytReady=false,wantPlay=false;
+async function findIntroFile(){try{const r=await fetch("intro.mp4",{method:"HEAD",cache:"no-store"});if(r.ok)return true}catch(e){}return false}
 async function playVideoIntro(){
-  const ov=$("#introOv");ov.classList.add("vid");$("#ioVideo").hidden=false;$("#ioSound").hidden=false;
+  const ov=$("#introOv");ov.classList.add("vid");$("#ioVideo").hidden=false;$("#ioStart").hidden=false;wantPlay=false;
+  $("#ioStartBtn").focus({preventScroll:true});
+  if(!vidKind)vidKind=(await findIntroFile())?"mp4":"yt";
+  if(vidKind==="mp4"){const v=$("#ioMp4");$("#ytIntro").hidden=true;v.hidden=false;
+    if(!v.src){v.src="intro.mp4";v.onended=closeIntro;v.onerror=()=>videoFailed();v.load()}else{try{v.pause();v.currentTime=0}catch(e){}}
+    return}
+  $("#ioMp4").hidden=true;
   try{await loadYT()}catch(e){videoFailed();return}
-  if(ytPlayer){try{ytPlayer.mute();ytPlayer.seekTo(0);ytPlayer.playVideo();return}catch(e){}}
-  ytPlayer=new YT.Player("ytIntro",{videoId:INTRO_VIDEO_ID,playerVars:{autoplay:1,mute:1,playsinline:1,rel:0,modestbranding:1,controls:1},
-    events:{onReady:e=>{try{e.target.mute();e.target.playVideo()}catch(err){}},
+  if(ytPlayer){try{ytPlayer.pauseVideo();ytPlayer.seekTo(0)}catch(e){}return}
+  ytPlayer=new YT.Player("ytIntro",{videoId:INTRO_VIDEO_ID,playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,iv_load_policy:3,rel:0,playsinline:1},
+    events:{onReady:()=>{ytReady=true;if(wantPlay)startVideo()},
       onStateChange:e=>{if(e.data===0)closeIntro()},
       onError:()=>videoFailed()}});
 }
-$("#ioSound").onclick=()=>{try{ytPlayer.unMute();ytPlayer.setVolume(85);ytPlayer.playVideo()}catch(e){}$("#ioSound").hidden=true};
+function startVideo(){
+  wantPlay=true;$("#ioStart").hidden=true;
+  if(vidKind==="mp4"){const v=$("#ioMp4");v.muted=false;v.volume=INTRO_VOLUME/100;const p=v.play();if(p&&p.catch)p.catch(()=>{v.muted=true;v.play().catch(()=>videoFailed())});return}
+  if(!ytReady||!ytPlayer)return;
+  try{ytPlayer.unMute();ytPlayer.setVolume(INTRO_VOLUME);ytPlayer.playVideo()}catch(e){videoFailed()}
+}
+$("#ioStartBtn").onclick=startVideo;
 let introTimers=[];
 function playIntro(force){
   const ov=$("#introOv");
@@ -1899,7 +1925,7 @@ function startAnimTimers(){
 function closeIntro(){
   const ov=$("#introOv");if(ov.hidden)return;
   introTimers.forEach(clearTimeout);introTimers=[];
-  try{if(ytPlayer)ytPlayer.stopVideo()}catch(e){}
+  try{if(ytPlayer)ytPlayer.stopVideo()}catch(e){}try{$("#ioMp4").pause()}catch(e){}
   try{localStorage.setItem("bb-intro-off",$("#ioNever").checked?"1":"0")}catch(e){}
   if(REDUCED){ov.hidden=true;return}
   ov.classList.add("out");setTimeout(()=>{ov.hidden=true;ov.classList.remove("out")},800);
