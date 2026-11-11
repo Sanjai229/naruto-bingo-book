@@ -942,6 +942,11 @@ const PHOTO_TITLES={gaara:"Desert Guardian Leader",temari:"Wind Strategist",kank
 const PHOTO_DIR={};
 ["raikage1","raikage2","raikage3","raikage4","darui","c","mabui","karui","omoi","samui","atsui","killerbee","bluebee","fukai","motoi","dodai","toroi","kinkaku","ginkaku"].forEach(id=>{PHOTO_DIR[id]="lightning/";PHOTOS[id]=PHOTOS[id]||"50% 22%"});
 Object.assign(PHOTOS,{raikage1:"50% 30%",raikage2:"50% 30%",raikage3:"50% 30%",raikage4:"50% 30%",omoi:"50% 30%",motoi:"50% 35%",c:"50% 15%",ginkaku:"50% 30%",kinkaku:"45% 20%",toroi:"40% 30%"});
+["guy","tenten","ino","choji","shino","hiruzen","neji","tobirama","tsunade","obito","kiba","asuma","sai","yamato","hashirama"].forEach(id=>{PHOTO_DIR[id]="fire/"});
+PHOTOS.hashirama="50% 22%";
+PHOTOS.yamato="50% 18%";
+Object.assign(PHOTOS,{kiba:"50% 25%",asuma:"50% 25%",sai:"40% 20%"});
+Object.assign(PHOTOS,{guy:"50% 20%",tenten:"50% 25%",ino:"50% 20%",choji:"50% 25%",shino:"50% 25%",hiruzen:"50% 25%",neji:"50% 15%",tobirama:"50% 25%",tsunade:"50% 18%",obito:"50% 25%"});
 const photo=id=>PHOTOS[id]?{src:"img/"+(PHOTO_DIR[id]||"")+id+".webp",pos:PHOTOS[id],title:PHOTO_TITLES[id]||""}:null;
 /* ===================== SHARED ===================== */
 const $=s=>document.querySelector(s);
