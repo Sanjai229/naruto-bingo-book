@@ -186,7 +186,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .meta{display:flex;justify-content:space-between;gap:12px;padding-block:16px 10px;color:var(--muted);font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;padding-bottom:56px}
 .card{position:relative;display:flex;flex-direction:column;text-align:left;border:1px solid var(--line);background:var(--sheet);border-radius:6px;padding:0;cursor:pointer;box-shadow:var(--shadow);overflow:hidden;transition:transform .18s ease,border-color .18s ease}
-.media{position:relative;aspect-ratio:3/2;max-width:100%;overflow:hidden;background:color-mix(in srgb,var(--v) 16%,var(--sheet));border-bottom:1px solid var(--line)}
+.media{position:relative;aspect-ratio:1/1;max-width:100%;overflow:hidden;background:color-mix(in srgb,var(--v) 16%,var(--sheet));border-bottom:1px solid var(--line)}
 .media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
 .card:hover .media img{transform:scale(1.05)}
 .ph{position:absolute;inset:0;display:grid;place-items:center}
@@ -390,6 +390,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .akabanner.noimg{aspect-ratio:auto;min-height:140px;background:repeating-linear-gradient(135deg,#17110b 0 18px,#22180e 18px 36px)}
 .akashade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,0) 60%)}
 .akabanner:not(:has(.akaplay)) .akashade{display:none}
+.akabtns{position:relative;display:flex;flex-wrap:wrap;gap:10px;margin:0 0 20px 20px}
+.akabtns .akaplay{margin:0}
+@media (max-width:640px){.akabtns{margin:0 0 14px 14px;gap:8px}}
 .akaplay{position:relative;margin:0 0 20px 20px;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;background:var(--bc,#AE2A1F);color:#fff;font-weight:800;font-size:16px;padding:8px 20px 8px 8px;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .akaplay i{width:34px;height:34px;border-radius:50%;background:#fff;display:grid;place-items:center}
 .akaplay i svg{width:12px;height:12px;fill:var(--bc,#AE2A1F);margin-left:2px}
@@ -432,8 +435,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .sheet-top .sp{flex:1;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .icon{width:36px;height:36px;border:1px solid var(--line);background:var(--paper);border-radius:6px;cursor:pointer;display:grid;place-items:center}
 .sheet-body{overflow-y:auto;padding:22px 20px 32px;display:flex;flex-direction:column;gap:22px}
-.hero{flex:none;margin:-22px -20px 0;position:relative;aspect-ratio:16/9;max-width:calc(100% + 40px);overflow:hidden;background:var(--chip)}
-.hero img{width:100%;height:100%;object-fit:cover;display:block;animation:heroIn .7s cubic-bezier(.2,.8,.2,1) both}
+.hero{flex:none;margin:-22px -20px 0;position:relative;aspect-ratio:4/3;max-width:calc(100% + 40px);overflow:hidden;background:var(--chip)}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;animation:heroIn .7s cubic-bezier(.2,.8,.2,1) both}
+.hero img.hbg{object-fit:cover;filter:blur(22px) brightness(.6) saturate(1.2);transform:scale(1.15);animation:none}
 @keyframes heroIn{from{opacity:0;transform:scale(1.06)}}
 .hero figcaption{position:absolute;right:8px;bottom:8px;font-size:11px;background:rgba(0,0,0,.55);color:#fff;padding:2px 7px;border-radius:3px}
 .d-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
@@ -944,6 +948,8 @@ const PHOTO_DIR={};
 Object.assign(PHOTOS,{raikage1:"50% 30%",raikage2:"50% 30%",raikage3:"50% 30%",raikage4:"50% 30%",omoi:"50% 30%",motoi:"50% 35%",c:"50% 15%",ginkaku:"50% 30%",kinkaku:"45% 20%",toroi:"40% 30%"});
 ["guy","tenten","ino","choji","shino","hiruzen","neji","tobirama","tsunade","obito","kiba","asuma","sai","yamato","hashirama"].forEach(id=>{PHOTO_DIR[id]="fire/"});
 PHOTOS.hashirama="50% 22%";
+Object.assign(PHOTOS,{tobirama:"50% 60%",ginkaku:"62% 30%",hanzo:"50% 15%",kinkaku:"55% 12%",asuma:"50% 40%",ino:"55% 30%",kiba:"62% 30%",tenten:"35% 30%",neji:"45% 30%",sai:"43% 30%",tsunade:"50% 30%",nagato:"42% 25%"});
+PHOTO_DIR.nagato="rain/";
 PHOTOS.yamato="50% 18%";
 Object.assign(PHOTOS,{kiba:"50% 25%",asuma:"50% 25%",sai:"40% 20%"});
 Object.assign(PHOTOS,{guy:"50% 20%",tenten:"50% 25%",ino:"50% 20%",choji:"50% 25%",shino:"50% 25%",hiruzen:"50% 25%",neji:"50% 15%",tobirama:"50% 25%",tsunade:"50% 18%",obito:"50% 25%"});
@@ -1029,7 +1035,7 @@ function detail(c){
   const land=landOfChar(c);
   const ph=photo(c.id);
   $("#detail").innerHTML=`
-    ${ph?`<figure class="hero"><img src="${ph.src}" alt="Fan art of ${esc(c.name)}" style="object-position:${ph.pos}"><figcaption>Fan art${ph.title?": "+esc(ph.title):""}</figcaption></figure>`:""}
+    ${ph?`<figure class="hero"><img class="hbg" src="${ph.src}" alt="" aria-hidden="true"><img src="${ph.src}" alt="Fan art of ${esc(c.name)}"><figcaption>Fan art${ph.title?": "+esc(ph.title):""}</figcaption></figure>`:""}
     <div class="d-head">
       <div><span class="eyebrow" style="--v:${vcol(c.village)}"><span class="vdot"></span>${esc(c.village==="None"?"No village":c.village+" Village")}${c.rogue?" · Missing-nin":""}</span>
       <h2 id="dName">${esc(c.name)}</h2></div>
@@ -1587,9 +1593,9 @@ function renderOrgs(){
     body=`<div class="osec"><h3>Members in the book · ${ids.length}</h3><div class="grid">${ids.map(id=>orgCard(BY[id])).join("")}</div></div>`;
   }
   const bn=ORG_BANNERS[o.id];
-  const akaBanner=bn?`<div class="akabanner${bn.fit==="contain"?" fitc":""}" id="akaBanner" style="--bc:${bn.color};${bn.bg?"background:"+bn.bg:""}">${bn.fit==="contain"&&!bn.bg?`<img src="${bn.img}" alt="" class="bgblur" aria-hidden="true">`:""}<img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${thAvail[bn.vid]?`<button type="button" class="akaplay" data-playvid="${bn.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(bn.label)}</button>`:""}</div>`:"";
+  const akaBanner=bn?`<div class="akabanner${bn.fit==="contain"?" fitc":""}" id="akaBanner" style="--bc:${bn.color};${bn.bg?"background:"+bn.bg:""}">${bn.fit==="contain"&&!bn.bg?`<img src="${bn.img}" alt="" class="bgblur" aria-hidden="true">`:""}<img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${(()=>{const btns=[{vid:bn.vid,label:bn.label},...(bn.more||[])].filter(x=>thAvail[x.vid]);return btns.length?`<div class="akabtns">${btns.map(x=>`<button type="button" class="akaplay" data-playvid="${x.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(x.label)}</button>`).join("")}</div>`:""})()}</div>`:"";
   if(bn)setTimeout(()=>{const im=$("#akaImg");if(!im)return;
-    if(bn.fit==="auto"){const decide=()=>{if(!im.naturalWidth)return;const b=$("#akaBanner");const r=(im.naturalWidth/im.naturalHeight)/(b.clientWidth/b.clientHeight);if(r<.8||r>1.25){b.classList.add("fitc");const g=document.createElement("img");g.src=bn.img;g.alt="";g.className="bgblur";g.setAttribute("aria-hidden","true");b.prepend(g)}};if(im.complete)decide();else im.addEventListener("load",decide,{once:true})}const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]){b.classList.add("noimg");b.querySelectorAll("img").forEach(x=>x.remove())}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
+    if(bn.fit==="auto"){const decide=()=>{if(!im.naturalWidth)return;const b=$("#akaBanner");const r=(im.naturalWidth/im.naturalHeight)/(b.clientWidth/b.clientHeight);if(r<.8||r>1.25){b.classList.add("fitc");const g=document.createElement("img");g.src=bn.img;g.alt="";g.className="bgblur";g.setAttribute("aria-hidden","true");b.prepend(g)}};if(im.complete)decide();else im.addEventListener("load",decide,{once:true})}const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]||(bn.more||[]).some(x=>thAvail[x.vid])){b.classList.add("noimg");b.querySelectorAll("img").forEach(x=>x.remove())}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
   $("#orgBody").innerHTML=akaBanner+`<div class="ohero ${o.id==="akatsuki"?"aka":""}"><span class="oseal" lang="ja">${o.seal}</span><div><p class="kicker">${esc(o.tag)}</p><h2>${esc(o.name)} <span lang="ja">${o.jp}</span></h2><p>${esc(o.desc)}</p></div></div>${body}`;
 }
 $("#orgNav").addEventListener("click",e=>{const b=e.target.closest("[data-org]");if(!b)return;st.org=b.dataset.org;renderOrgs();setHash(viewHash());window.scrollTo({top:0,behavior:REDUCED?"auto":"smooth"})});
@@ -1957,11 +1963,12 @@ const VOLUME_DEFAULT=50; /* medium sound */
 const THEATRE={
   opening:{title:"The opening",jp:"オープニング",file:"intro.mp4",yt:INTRO_VIDEO_ID},
   akatsuki:{title:"Akatsuki intro",jp:"暁",file:"akatsuki.mp4",yt:null},
+  akatsuki2:{title:"Akatsuki trailer 2",jp:"暁 弐",file:"akatsuki2.mp4",yt:null},
   kage:{title:"The Five Kage",jp:"五影",file:"kage.mp4",yt:null},
   anbu:{title:"ANBU",jp:"暗部",file:"anbu.mp4",yt:null}
 };
 /* Organisation banners: photo in img/<name>.webp, video in the file above */
-const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch the Akatsuki intro",color:"#AE2A1F"},
+const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch the Akatsuki intro",color:"#AE2A1F",more:[{vid:"akatsuki2",label:"Trailer 2"}]},
   kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",fit:"contain"},
   anbu:{img:"img/anbu.webp",vid:"anbu",label:"Watch the ANBU video",color:"#3E4A5C",fit:"contain",bg:"#ffffff"}};
 const HOSTED=!/claude/.test(location.hostname)&&!window.claude&&location.protocol!=="about:";
