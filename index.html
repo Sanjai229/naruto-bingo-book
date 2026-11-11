@@ -1597,7 +1597,7 @@ function renderOrgs(){
     body=`<div class="osec"><h3>Members in the book · ${ids.length}</h3><div class="grid">${ids.map(id=>orgCard(BY[id])).join("")}</div></div>`;
   }
   const bn=ORG_BANNERS[o.id];
-  const akaBanner=bn?`<div class="akabanner${bn.fit==="contain"?" fitc":""}" id="akaBanner" style="--bc:${bn.color};${bn.bg?"background:"+bn.bg:""}">${bn.fit==="contain"&&!bn.bg?`<img src="${bn.img}" alt="" class="bgblur" aria-hidden="true">`:""}<img src="${bn.img}" alt="" id="akaImg"><div class="akashade"></div>${(()=>{const btns=[{vid:bn.vid,label:bn.label},...(bn.more||[])].filter(x=>thAvail[x.vid]);return btns.length?`<div class="akabtns">${btns.map(x=>`<button type="button" class="akaplay" data-playvid="${x.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(x.label)}</button>`).join("")}</div>`:""})()}</div>`:"";
+  const akaBanner=bn?`<div class="akabanner${bn.fit==="contain"?" fitc":""}" id="akaBanner" style="--bc:${bn.color};${bn.bg?"background:"+bn.bg:""}">${bn.fit==="contain"&&!bn.bg?`<img src="${bn.img}" alt="" class="bgblur" aria-hidden="true">`:""}<img src="${bn.img}" alt="" id="akaImg"${bn.pos?` style="object-position:${bn.pos}"`:""}><div class="akashade"></div>${(()=>{const btns=[{vid:bn.vid,label:bn.label},...(bn.more||[])].filter(x=>thAvail[x.vid]);return btns.length?`<div class="akabtns">${btns.map(x=>`<button type="button" class="akaplay" data-playvid="${x.vid}"><i><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg></i>${esc(x.label)}</button>`).join("")}</div>`:""})()}</div>`:"";
   if(bn)setTimeout(()=>{const im=$("#akaImg");if(!im)return;
     if(bn.fit==="auto"){const decide=()=>{if(!im.naturalWidth)return;const b=$("#akaBanner");const r=(im.naturalWidth/im.naturalHeight)/(b.clientWidth/b.clientHeight);if(r<.8||r>1.25){b.classList.add("fitc");const g=document.createElement("img");g.src=bn.img;g.alt="";g.className="bgblur";g.setAttribute("aria-hidden","true");b.prepend(g)}};if(im.complete)decide();else im.addEventListener("load",decide,{once:true})}const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]||(bn.more||[]).some(x=>thAvail[x.vid])){b.classList.add("noimg");b.querySelectorAll("img").forEach(x=>x.remove())}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
   $("#orgBody").innerHTML=akaBanner+`<div class="ohero ${o.id==="akatsuki"?"aka":""}"><span class="oseal" lang="ja">${o.seal}</span><div><p class="kicker">${esc(o.tag)}</p><h2>${esc(o.name)} <span lang="ja">${o.jp}</span></h2><p>${esc(o.desc)}</p></div></div>${body}`;
@@ -1975,10 +1975,10 @@ const THEATRE={
 };
 /* Organisation banners: photo in img/<name>.webp, video in the file above */
 const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch the Akatsuki intro",color:"#AE2A1F",more:[{vid:"akatsuki2",label:"Trailer 2"}]},
-  kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",fit:"contain"},
+  kage:{img:"img/kage.webp",vid:"kage",label:"Watch the Five Kage video",color:"#C4520B",pos:"50% 45%"},
   anbu:{img:"img/anbu.webp",vid:"anbu",label:"Watch the ANBU video",color:"#3E4A5C",fit:"contain",bg:"#ffffff"},
-  root:{img:"img/root.webp",vid:"root",label:"Watch The Foundation video",color:"#7A4A1E",fit:"contain"},
-  sannin:{img:"img/sannin.webp",vid:"sannin",label:"Watch the Sannin video",color:"#5B3A86",fit:"contain"}};
+  root:{img:"img/root.webp",vid:"root",label:"Watch The Foundation video",color:"#7A4A1E",pos:"50% 6%"},
+  sannin:{img:"img/sannin.webp",vid:"sannin",label:"Watch the Sannin video",color:"#5B3A86",pos:"50% 35%"}};
 const HOSTED=!/claude/.test(location.hostname)&&!window.claude&&location.protocol!=="about:";
 const thAvail={};let ytPlayer=null,ytLoading=null,thCur=null,thKind=null,thTick=null,thVol=VOLUME_DEFAULT;
 function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)return ytLoading;
