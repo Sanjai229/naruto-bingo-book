@@ -208,6 +208,25 @@ button,input,select,textarea{font:inherit;color:inherit}
 .empty{grid-column:1/-1;text-align:center;padding:56px 16px;color:var(--muted)}
 .empty b{display:block;font-family:var(--display);font-size:22px;color:var(--ink);margin-bottom:6px}
 
+/* Credits */
+.crjp{font-size:.42em;color:var(--accent);letter-spacing:.08em;vertical-align:middle;margin-left:6px}
+.crcard{cursor:default}
+.crcard:hover{transform:none}
+.crmedia{display:block;width:100%;border:0;padding:0;margin:0;background:none;font:inherit;color:inherit;text-align:left}
+button.crmedia{cursor:pointer}
+.crno{position:absolute;left:12px;top:10px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.crplay{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.85);display:grid;place-items:center;transition:transform .2s ease,background .2s ease}
+.crplay svg{width:20px;height:20px;fill:#fff;margin-left:4px}
+button.crmedia:hover .crplay{transform:scale(1.08);background:var(--v)}
+.crnote{font-size:13.5px;color:var(--ink);opacity:.85}
+.crby{font-size:12px;color:var(--muted)}
+.crrow{margin-top:auto;padding-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.crrow .akaplay{margin:0;font-size:14px;padding:6px 16px 6px 6px;box-shadow:none}
+.crrow .akaplay i{width:28px;height:28px}
+.crrow .akaplay i svg{width:10px;height:10px}
+.crlink{border:0;background:none;padding:4px 2px;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.crlink:hover{color:var(--ink)}
+
 /* Organisations */
 .orgs{padding-bottom:64px;display:flex;flex-direction:column;gap:30px}
 .ohero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:start;padding-top:30px}
@@ -526,6 +545,7 @@ button,input,select,textarea{font:inherit;color:inherit}
       <button type="button" role="tab" id="tabChars" aria-selected="false" aria-controls="viewChars">Characters</button>
       <button type="button" role="tab" id="tabOrgs" aria-selected="false" aria-controls="viewOrgs">Organisations</button>
       <button type="button" role="tab" id="tabJutsu" aria-selected="false" aria-controls="viewJutsu">Jutsu</button>
+      <button type="button" role="tab" id="tabCredits" aria-selected="false" aria-controls="viewCredits">Credits</button>
       <button type="button" role="tab" id="tabJoin" aria-selected="false" aria-controls="viewJoin" class="joinTab">Join the book</button>
     </nav>
   </div>
@@ -619,6 +639,17 @@ button,input,select,textarea{font:inherit;color:inherit}
     <div class="meta"><span id="jcount"></span><span>Tap a name to open the ninja's entry</span></div>
     <div class="jgrid" id="jgrid"></div>
   </main>
+</section>
+
+<section id="viewCredits" role="tabpanel" aria-labelledby="tabCredits" hidden>
+  <div class="wrap intro">
+    <div>
+      <h1>Credits <span class="crjp" lang="ja">特別出演</span></h1>
+      <p>Special mentions. The shinobi who made this story what it is, each with an edit made for them. Press play on a card to watch.</p>
+    </div>
+    <div class="tally"><b id="crTotal">0</b>special mentions</div>
+  </div>
+  <main class="wrap"><div class="grid crgrid" id="crGrid"></div></main>
 </section>
 
 <section id="viewJoin" role="tabpanel" aria-labelledby="tabJoin" hidden>
@@ -980,6 +1011,7 @@ function viewHash(){
   if(st.view==="chars")return "characters";
   if(st.view==="orgs")return "org-"+st.org;
   if(st.view==="join")return "join";
+  if(st.view==="credits")return "credits";
   if(st.view==="jutsu")return "jutsu-"+{nin:"ninjutsu",gen:"genjutsu",tai:"taijutsu"}[st.jcat];
   if(st.journey)return "journey-"+st.journey;
   if(st.land)return "land-"+st.land;
@@ -1979,6 +2011,35 @@ const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch
   anbu:{img:"img/anbu.webp",vid:"anbu",label:"Watch the ANBU video",color:"#3E4A5C",fit:"contain",bg:"#ffffff"},
   root:{img:"img/root.webp",vid:"root",label:"Watch The Foundation video",color:"#7A4A1E",pos:"50% 6%"},
   sannin:{img:"img/sannin.webp",vid:"sannin",label:"Watch the Sannin video",color:"#5B3A86",pos:"50% 35%"}};
+/* Credits: special mentions. Each edit video goes in credits/<id>.mp4 (id = the character id). */
+const CREDITS=[
+  {id:"naruto",note:"The boy who never gave up, and the heart of the whole story.",by:""},
+  {id:"itachi",note:"Quiet, gifted and always one step ahead.",by:""},
+  {id:"jiraiya",note:"The Toad Sage who taught a generation of heroes.",by:""}
+].filter(x=>BY[x.id]);
+CREDITS.forEach(x=>{const c=BY[x.id];THEATRE["cr-"+x.id]={title:c.name,jp:c.jp,file:x.file||"credits/"+x.id+".mp4",yt:null,group:"credits"}});
+let thChecked=false;
+function renderCredits(){
+  const g=$("#crGrid");if(!g)return;$("#crTotal").textContent=CREDITS.length;
+  const play=`<svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg>`;
+  g.innerHTML=CREDITS.length?CREDITS.map((x,i)=>{const c=BY[x.id],k="cr-"+x.id,av=thAvail[k],ph=photo(c.id);
+    const pic=ph?`<img src="${ph.src}" alt="" loading="lazy" style="object-position:${ph.pos}">`:`<span class="ph"><span lang="ja" style="font-size:${Math.min(30,Math.floor(120/[...c.jp].length))}px">${esc(c.jp)}</span></span>`;
+    const no=`<span class="crno">${String(i+1).padStart(2,"0")}</span>`;
+    const status=!HOSTED?"Edit plays on the live site":!thChecked?"Checking for the edit...":"Edit coming soon";
+    return `<article class="card crcard" style="--v:${vcol(c.village)}">
+      ${av?`<button type="button" class="media crmedia" data-playvid="${k}" aria-label="Watch the ${esc(c.name)} edit">${pic}${no}<span class="crplay">${play}</span></button>`:`<span class="media crmedia">${pic}${no}</span>`}
+      <span class="card-main">
+        <span class="eyebrow"><span class="vdot"></span>Special mention · ${esc(c.village==="None"?"No village":c.village)}</span>
+        <span class="cname">${esc(c.name)}</span>
+        <span class="cjp" lang="ja">${esc(c.jp)}</span>
+        ${x.note?`<span class="crnote">${esc(x.note)}</span>`:""}
+        ${x.by?`<span class="crby">Edit by ${esc(x.by)}</span>`:""}
+        <span class="crrow">${av?`<button type="button" class="akaplay" data-playvid="${k}" style="--bc:${vcol(c.village)}"><i>${play}</i>Watch the edit</button>`:`<span class="tag">${status}</span>`}
+          <button type="button" class="crlink" data-open="${c.id}">Open entry</button></span>
+      </span>
+    </article>`}).join(""):`<p class="empty"><b>No special mentions yet</b>They will appear here soon.</p>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openSheet(b.dataset.open)});
 const HOSTED=!/claude/.test(location.hostname)&&!window.claude&&location.protocol!=="about:";
 const thAvail={};let ytPlayer=null,ytLoading=null,thCur=null,thKind=null,thTick=null,thVol=VOLUME_DEFAULT;
 function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)return ytLoading;
@@ -1986,13 +2047,13 @@ function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)
     const sc=document.createElement("script");sc.src="https://www.youtube.com/iframe_api";sc.onerror=()=>{clearTimeout(t);ytLoading=null;rej()};document.head.appendChild(sc)});return ytLoading}
 async function fileThere(f){try{const r=await fetch(f,{method:"HEAD",cache:"no-store"});return r.ok}catch(e){return false}}
 async function checkVideos(){if(!HOSTED)return;
-  for(const [k,v] of Object.entries(THEATRE)){thAvail[k]=(await fileThere(v.file))?"mp4":(v.yt?"yt":null)}
-  $("#thBtn").hidden=!thAvail.opening&&!thAvail.akatsuki;renderTheatreTabs();if(st.view==="orgs")renderOrgs();
+  await Promise.all(Object.entries(THEATRE).map(async([k,v])=>{thAvail[k]=(await fileThere(v.file))?"mp4":(v.yt?"yt":null)}));thChecked=true;
+  $("#thBtn").hidden=!thAvail.opening&&!thAvail.akatsuki;renderTheatreTabs();if(st.view==="orgs")renderOrgs();renderCredits();
   if(thAvail.opening==="yt")loadYT().catch(()=>{})}
 const fmt=t=>{t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")};
 function thMsg(t){const m=$("#thMsg");m.textContent=t;m.hidden=!t}
 function thState(playing){$("#thPlay").innerHTML=playing?`<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>Pause`:`<svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg>Play`}
-function renderTheatreTabs(){const keys=Object.keys(THEATRE).filter(k=>thAvail[k]);
+function renderTheatreTabs(){const grp=(THEATRE[thCur]||{}).group||"main";const keys=Object.keys(THEATRE).filter(k=>thAvail[k]&&(THEATRE[k].group||"main")===grp);
   $("#thTabs").innerHTML=keys.length>1?keys.map(k=>`<button type="button" class="chip" data-th="${k}" aria-pressed="${k===thCur}">${esc(THEATRE[k].title)}</button>`).join(""):"";}
 function stopAll(){try{$("#thMp4").pause()}catch(e){}try{if(ytPlayer)ytPlayer.pauseVideo()}catch(e){}}
 async function openTheatre(key){
@@ -2122,7 +2183,7 @@ if(!location.hash)playIntro(false);
 /* ===================== VIEWS + ROUTER ===================== */
 function setView(v,quiet){
   st.view=v;
-  $("#viewMap").hidden=v!=="map";$("#viewChars").hidden=v!=="chars";$("#viewOrgs").hidden=v!=="orgs";$("#viewJutsu").hidden=v!=="jutsu";$("#tabJutsu").setAttribute("aria-selected",v==="jutsu");$("#viewJoin").hidden=v!=="join";$("#tabJoin").setAttribute("aria-selected",v==="join");if(v==="jutsu")renderJutsu();
+  $("#viewMap").hidden=v!=="map";$("#viewChars").hidden=v!=="chars";$("#viewOrgs").hidden=v!=="orgs";$("#viewJutsu").hidden=v!=="jutsu";$("#tabJutsu").setAttribute("aria-selected",v==="jutsu");$("#viewJoin").hidden=v!=="join";$("#viewCredits").hidden=v!=="credits";$("#tabCredits").setAttribute("aria-selected",v==="credits");if(v==="credits")renderCredits();$("#tabJoin").setAttribute("aria-selected",v==="join");if(v==="jutsu")renderJutsu();
   $("#tabMap").setAttribute("aria-selected",v==="map");$("#tabChars").setAttribute("aria-selected",v==="chars");$("#tabOrgs").setAttribute("aria-selected",v==="orgs");
   if(v==="orgs")renderOrgs();
   if(v==="map"){resize();startLoop()}
@@ -2133,6 +2194,7 @@ $("#tabChars").onclick=()=>setView("chars");
 $("#tabOrgs").onclick=()=>setView("orgs");
 $("#tabJutsu").onclick=()=>setView("jutsu");
 $("#tabJoin").onclick=()=>setView("join");
+$("#tabCredits").onclick=()=>setView("credits");
 $("#brandBtn").onclick=()=>{setView("map");selectLand(null)};
 $("#grid").addEventListener("click",e=>{const b=e.target.closest(".card");if(b)openSheet(b.dataset.id)});
 $("#q").addEventListener("input",e=>{st.q=e.target.value;renderChars()});
@@ -2150,6 +2212,7 @@ function route(){
   if(st.open)closeSheet(true);
   if(h==="characters"){setView("chars",true);return}
   if(h==="join"){setView("join",true);return}
+  if(h==="credits"){setView("credits",true);return}
   if(h==="jutsu"||h.startsWith("jutsu-")){const m={"jutsu-ninjutsu":"nin","jutsu-genjutsu":"gen","jutsu-taijutsu":"tai"}[h];if(m)st.jcat=m;setView("jutsu",true);return}
   if(h==="organisations"||h.startsWith("org-")){if(OBY[h.slice(4)])st.org=h.slice(4);setView("orgs",true);return}
   setView("map",true);
