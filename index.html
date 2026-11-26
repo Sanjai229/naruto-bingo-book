@@ -208,24 +208,125 @@ button,input,select,textarea{font:inherit;color:inherit}
 .empty{grid-column:1/-1;text-align:center;padding:56px 16px;color:var(--muted)}
 .empty b{display:block;font-family:var(--display);font-size:22px;color:var(--ink);margin-bottom:6px}
 
-/* Credits */
-.crjp{font-size:.42em;color:var(--accent);letter-spacing:.08em;vertical-align:middle;margin-left:6px}
-.crcard{cursor:default}
-.crcard:hover{transform:none}
-.crmedia{display:block;width:100%;border:0;padding:0;margin:0;background:none;font:inherit;color:inherit;text-align:left}
-button.crmedia{cursor:pointer}
-.crno{position:absolute;left:12px;top:10px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.6)}
-.crplay{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.85);display:grid;place-items:center;transition:transform .2s ease,background .2s ease}
-.crplay svg{width:20px;height:20px;fill:#fff;margin-left:4px}
-button.crmedia:hover .crplay{transform:scale(1.08);background:var(--v)}
-.crnote{font-size:13.5px;color:var(--ink);opacity:.85}
-.crby{font-size:12px;color:var(--muted)}
-.crrow{margin-top:auto;padding-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.crrow .akaplay{margin:0;font-size:14px;padding:6px 16px 6px 6px;box-shadow:none}
-.crrow .akaplay i{width:28px;height:28px}
-.crrow .akaplay i svg{width:10px;height:10px}
-.crlink{border:0;background:none;padding:4px 2px;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.crlink:hover{color:var(--ink)}
+/* Organisation index */
+.obar{display:flex;align-items:center;gap:10px;min-width:0}
+.obar .gchips{flex:1;min-width:0}
+.oback{flex:none;display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--sheet);border-radius:999px;padding:5px 12px 5px 8px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)}
+.oback svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+.oback:hover{border-color:var(--muted)}
+.oidx{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:6px 0 60px}
+@media (min-width:900px){.oidx{grid-template-columns:repeat(3,1fr)}}
+.otile{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:270px;border:0;border-radius:12px;overflow:hidden;padding:0;cursor:pointer;text-align:left;color:#fff;background:var(--oc);box-shadow:var(--shadow);isolation:isolate;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.otile:hover{transform:translateY(-3px)}
+.otile.feat{grid-column:1/-1;min-height:min(42vw,380px)}
+.otile .oimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.otile .oimg.fitc{object-fit:contain}
+.otile:hover .oimg{transform:scale(1.05)}
+.otile::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 42%,rgba(0,0,0,0) 72%)}
+.otile .obig{position:absolute;right:-6px;top:-14px;z-index:-1;font-family:var(--display);font-weight:800;font-size:150px;line-height:1;color:rgba(255,255,255,.13);writing-mode:vertical-rl;letter-spacing:-.02em;pointer-events:none}
+.otile .onum{position:absolute;left:18px;top:14px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.08em;opacity:.85}
+.otile .obody{padding:18px 70px 18px 20px}
+.otile .otag{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.8;font-weight:600}
+.otile .oname{display:block;font-family:var(--display);font-weight:800;font-size:clamp(24px,3vw,32px);line-height:1.1;margin:4px 0 8px}
+.otile.feat .oname{font-size:clamp(32px,5vw,54px)}
+.otile .oname span{font-size:.55em;margin-left:8px;opacity:.85}
+.otile .ometa{display:flex;flex-wrap:wrap;gap:6px}
+.otile .ometa span{font-size:12px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border-radius:999px;padding:3px 10px}
+.otile .ometa .ov{background:#fff;color:#111;font-weight:700}
+.otile .ogo{position:absolute;right:18px;bottom:18px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;transition:transform .25s ease}
+.otile .ogo svg{width:18px;height:18px;fill:none;stroke:#111;stroke-width:2.2}
+.otile:hover .ogo{transform:translateX(4px)}
+.vbadge{position:absolute;left:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.7);color:#fff;font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px 4px 6px}
+.vbadge i{width:18px;height:18px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.vbadge svg{width:7px;height:8px;fill:#111;margin-left:1px}
+
+/* Member profile (spotlight) */
+html.spot-open{overflow:hidden}
+.spot{--sc:#AE2A1F;position:fixed;inset:0;z-index:50;background:#07080b;color:#f3f1ea;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden;opacity:0;transition:opacity .3s ease}
+.spot.show{opacity:1}
+.sp-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.sp-bg img{width:100%;height:100%;object-fit:cover;filter:blur(40px) brightness(.35) saturate(1.3);transform:scale(1.25)}
+.sp-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 20% 40%,color-mix(in srgb,var(--sc) 38%,transparent),transparent 60%),linear-gradient(90deg,rgba(7,8,11,.2),rgba(7,8,11,.85) 65%)}
+.sp-top,.sp-main,.sp-strip{position:relative;z-index:1}
+.sp-top{display:flex;align-items:center;gap:14px;padding:max(14px,env(safe-area-inset-top,0px)) 20px 6px}
+.sp-org{font-family:var(--display);font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px}
+.sp-org i{font-style:normal;background:var(--sc);color:#fff;border-radius:4px;padding:2px 6px}
+.sp-pos{font-variant-numeric:tabular-nums;font-size:13px;color:rgba(243,241,234,.6);letter-spacing:.08em}
+.sp-x{margin-left:auto;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.35);color:#fff;display:grid;place-items:center;cursor:pointer}
+.sp-x svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.sp-main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center;padding:6px clamp(56px,7vw,96px);min-height:0}
+.sp-media{--ar:.8;position:relative;width:min(100%,calc(min(72vh,100%) * var(--ar)));aspect-ratio:var(--ar);max-height:100%;justify-self:end;border-radius:14px;overflow:hidden;background:#111;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)}
+.sp-media .mbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(20px) brightness(.55);transform:scale(1.2)}
+.sp-media .mimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;animation:spZoom 14s ease-out both}
+.sp-media .mph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:64px;writing-mode:vertical-rl;color:rgba(255,255,255,.35);background:color-mix(in srgb,var(--sc) 30%,#111)}
+@keyframes spZoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+.sp-ring{position:absolute;right:14px;top:14px;width:50px;height:50px;border-radius:50%;background:var(--sc);color:#fff;font-family:var(--display);font-weight:800;font-size:24px;display:grid;place-items:center;border:2px solid rgba(255,255,255,.8);transform:rotate(-8deg);box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.sp-play{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;background:var(--sc);color:#fff;font:inherit;font-weight:800;font-size:16px;padding:8px 22px 8px 8px;cursor:pointer;white-space:nowrap;box-shadow:0 10px 34px rgba(0,0,0,.55)}
+.sp-play i{position:relative;width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.sp-play i::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(255,255,255,.7);animation:spPulse 1.8s ease-out infinite}
+.sp-play svg{width:13px;height:14px;fill:var(--sc);margin-left:3px}
+.sp-play:hover{filter:brightness(1.12)}
+@keyframes spPulse{from{transform:scale(.85);opacity:1}to{transform:scale(1.35);opacity:0}}
+.sp-soon{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);white-space:nowrap;font-size:13px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 14px;color:rgba(255,255,255,.85)}
+.sp-info{min-width:0;max-height:100%;overflow:auto;padding:10px 4px 10px 0;scrollbar-width:thin}
+.sp-kick{margin:0;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--sc) 55%,#fff);font-weight:700}
+.sp-namerow{margin:6px 0 16px}
+.sp-name{font-family:var(--display);font-weight:800;font-size:clamp(38px,5.4vw,76px);line-height:.98;margin:0;text-wrap:balance}
+.sp-jp{display:block;margin-top:8px;font-family:var(--display);font-weight:800;font-size:clamp(17px,1.8vw,22px);letter-spacing:.14em;color:var(--sc);line-height:1;filter:brightness(1.5)}
+.sp-stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.sp-threat{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:6px 14px 6px 6px;background:rgba(255,255,255,.05)}
+.sp-threat b{width:38px;height:38px;border-radius:8px;display:grid;place-items:center;font-family:var(--display);font-size:24px;background:#fff;color:#111}
+.sp-threat b.S{background:#e8403a;color:#fff}.sp-threat b.A{background:#ee7c2e;color:#fff}.sp-threat b.B{background:#3d7dd8;color:#fff}
+.sp-threat span{font-size:12px;line-height:1.25;color:rgba(243,241,234,.7)}
+.sp-threat span strong{display:block;color:#fff;font-size:14px}
+.sp-facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1px;margin:0 0 16px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.1)}
+.sp-facts div{background:rgba(10,11,15,.75);padding:10px 12px}
+.sp-facts dt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(243,241,234,.55);margin-bottom:3px}
+.sp-facts dd{margin:0;font-weight:700;font-size:14.5px}
+.sp-facts button{border:0;background:none;color:inherit;font:inherit;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--sc)}
+.sp-bio{margin:0 0 16px;line-height:1.6;color:rgba(243,241,234,.85);max-width:60ch}
+.sp-h{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(243,241,234,.55);margin:0 0 8px;font-weight:700}
+.sp-nat{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.sp-nat span{display:inline-flex;align-items:center;gap:6px;font-size:13px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px 10px 3px 6px}
+.sp-nat i{width:10px;height:10px;border-radius:50%;background:var(--n)}
+.sp-jl{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:6px}
+.sp-jl li{display:flex;align-items:center;gap:10px;font-size:14.5px}
+.sp-jl li b{flex:none;width:24px;height:24px;border-radius:5px;display:grid;place-items:center;font-family:var(--display);font-size:13px;background:rgba(255,255,255,.14)}
+.sp-jl li b.S{background:#e8403a}.sp-jl li b.A{background:#ee7c2e}.sp-jl li b.B{background:#3d7dd8}
+.sp-fate{margin:0 0 16px;border-left:3px solid var(--sc);padding:4px 0 4px 12px;font-size:14px;color:rgba(243,241,234,.8)}
+.sp-acts{display:flex;flex-wrap:wrap;gap:10px}
+.sp-btn{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);color:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.sp-btn:hover{background:rgba(255,255,255,.14)}
+.sp-nav{position:absolute;top:50%;z-index:2;width:46px;height:46px;margin-top:-23px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.4);color:#fff;display:grid;place-items:center;cursor:pointer}
+.sp-nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
+.sp-nav:hover{background:var(--sc)}
+.sp-prev{left:14px}.sp-next{right:14px}
+.sp-strip{display:flex;gap:10px;justify-content:center;overflow-x:auto;scrollbar-width:none;padding:10px 20px max(14px,env(safe-area-inset-bottom,0px))}
+.sp-strip::-webkit-scrollbar{display:none}
+.sp-strip button{flex:none;position:relative;width:54px;height:54px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,.18);overflow:hidden;cursor:pointer;background:#222;color:#fff;font-family:var(--display);font-weight:800;opacity:.6;transition:opacity .2s,transform .2s,border-color .2s}
+.sp-strip button img{width:100%;height:100%;object-fit:cover}
+.sp-strip button:hover{opacity:1}
+.sp-strip button[aria-current="true"]{opacity:1;border-color:var(--sc);transform:scale(1.12)}
+.sp-strip button .sv{position:absolute;right:0;bottom:0;width:16px;height:16px;border-radius:50%;background:var(--sc);border:2px solid #07080b}
+/* entry animation */
+.spot.anim .sp-media{animation:spIn .7s cubic-bezier(.2,.8,.2,1) both}
+.spot.anim .sp-info>*{animation:spUp .6s cubic-bezier(.2,.8,.2,1) both}
+.spot.anim .sp-info>*:nth-child(2){animation-delay:.06s}.spot.anim .sp-info>*:nth-child(3){animation-delay:.12s}.spot.anim .sp-info>*:nth-child(4){animation-delay:.18s}.spot.anim .sp-info>*:nth-child(5){animation-delay:.24s}.spot.anim .sp-info>*:nth-child(n+6){animation-delay:.3s}
+.spot.anim.back .sp-media{animation-name:spInR}
+@keyframes spIn{from{opacity:0;transform:translateX(-40px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes spInR{from{opacity:0;transform:translateX(40px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes spUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.spot.anim .sp-media,.spot.anim .sp-info>*,.sp-media .mimg,.sp-play i::after{animation:none}}
+@media (max-width:820px){
+  .spot{overflow-y:auto;display:block}
+  .sp-top{position:sticky;top:0;background:linear-gradient(#07080bee,#07080b00)}
+  .sp-main{display:block;padding:4px 16px 8px}
+  .sp-media{width:min(100%,calc(62vh * var(--ar)));margin:0 auto 18px}
+  .sp-info{max-height:none;overflow:visible;padding:0}
+  .sp-nav{display:none}
+  .sp-strip{position:sticky;bottom:0;justify-content:flex-start;background:linear-gradient(#07080b00,#07080b 35%)}
+  .sp-strip button{width:46px;height:46px}
+}
 
 /* Organisations */
 .orgs{padding-bottom:64px;display:flex;flex-direction:column;gap:30px}
@@ -545,7 +646,6 @@ button.crmedia:hover .crplay{transform:scale(1.08);background:var(--v)}
       <button type="button" role="tab" id="tabChars" aria-selected="false" aria-controls="viewChars">Characters</button>
       <button type="button" role="tab" id="tabOrgs" aria-selected="false" aria-controls="viewOrgs">Organisations</button>
       <button type="button" role="tab" id="tabJutsu" aria-selected="false" aria-controls="viewJutsu">Jutsu</button>
-      <button type="button" role="tab" id="tabCredits" aria-selected="false" aria-controls="viewCredits">Credits</button>
       <button type="button" role="tab" id="tabJoin" aria-selected="false" aria-controls="viewJoin" class="joinTab">Join the book</button>
     </nav>
   </div>
@@ -613,7 +713,7 @@ button.crmedia:hover .crplay{transform:scale(1.08);background:var(--v)}
 </section>
 
 <section id="viewOrgs" role="tabpanel" aria-labelledby="tabOrgs" hidden>
-  <div class="bar"><div class="wrap"><div class="gchips" id="orgNav" role="group" aria-label="Organisations"></div></div></div>
+  <div class="bar" id="orgBar" hidden><div class="wrap"><div class="obar"><button type="button" class="oback" id="orgBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>All organisations</button><div class="gchips" id="orgNav" role="group" aria-label="Organisations"></div></div></div></div>
   <main class="wrap orgs" id="orgBody"></main>
 </section>
 
@@ -639,17 +739,6 @@ button.crmedia:hover .crplay{transform:scale(1.08);background:var(--v)}
     <div class="meta"><span id="jcount"></span><span>Tap a name to open the ninja's entry</span></div>
     <div class="jgrid" id="jgrid"></div>
   </main>
-</section>
-
-<section id="viewCredits" role="tabpanel" aria-labelledby="tabCredits" hidden>
-  <div class="wrap intro">
-    <div>
-      <h1>Credits <span class="crjp" lang="ja">特別出演</span></h1>
-      <p>Special mentions. The shinobi who made this story what it is, each with an edit made for them. Press play on a card to watch.</p>
-    </div>
-    <div class="tally"><b id="crTotal">0</b>special mentions</div>
-  </div>
-  <main class="wrap"><div class="grid crgrid" id="crGrid"></div></main>
 </section>
 
 <section id="viewJoin" role="tabpanel" aria-labelledby="tabJoin" hidden>
@@ -687,6 +776,19 @@ button.crmedia:hover .crplay{transform:scale(1.08);background:var(--v)}
     <div class="grid" id="jList"></div>
   </main>
 </section>
+
+<div class="spot" id="spot" role="dialog" aria-modal="true" aria-labelledby="spName" hidden>
+  <div class="sp-bg" aria-hidden="true"><img id="spBg" alt=""></div>
+  <div class="sp-top">
+    <span class="sp-org" id="spOrg"></span>
+    <span class="sp-pos" id="spPos"></span>
+    <button type="button" class="sp-x" id="spClose" aria-label="Close profile"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="sp-main" id="spMain"></div>
+  <button type="button" class="sp-nav sp-prev" id="spPrev" aria-label="Previous member"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+  <button type="button" class="sp-nav sp-next" id="spNext" aria-label="Next member"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+  <div class="sp-strip" id="spStrip" role="group" aria-label="Members"></div>
+</div>
 
 <div class="scrim" id="scrim" hidden></div>
 <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="dName" hidden>
@@ -1009,9 +1111,8 @@ const st={view:"map",q:"",village:"All",era:"all",group:"All",spoil:false,open:n
 function setHash(h){try{history.replaceState(null,"",h?"#"+h:location.pathname+location.search)}catch(e){location.hash=h||""}}
 function viewHash(){
   if(st.view==="chars")return "characters";
-  if(st.view==="orgs")return "org-"+st.org;
+  if(st.view==="orgs")return st.org?"org-"+st.org:"organisations";
   if(st.view==="join")return "join";
-  if(st.view==="credits")return "credits";
   if(st.view==="jutsu")return "jutsu-"+{nin:"ninjutsu",gen:"genjutsu",tai:"taijutsu"}[st.jcat];
   if(st.journey)return "journey-"+st.journey;
   if(st.land)return "land-"+st.land;
@@ -1571,12 +1672,48 @@ const ORGS=[
  {id:"explosion",name:"Explosion Corps",jp:"爆破部隊",seal:"爆",tag:"Hidden Stone strike unit",desc:"A Stone unit of ninja who fight with Explosion Release. Deidara was a member before he left the village.",members:()=>C.filter(c=>c.house==="Explosion Corps").map(c=>c.id)}
 ];
 const OBY=Object.fromEntries(ORGS.map(o=>[o.id,o]));
-st.org="akatsuki";
+st.org=null;
+const ORG_COL={akatsuki:"#AE2A1F",kage:"#C4520B",anbu:"#3E4A5C",root:"#7A4A1E",sannin:"#5B3A86",swordsmen:"#1F6E8C",jinchuriki:"#B0452A",beasts:"#8A2F5E",taka:"#46546B",explosion:"#B5781C"};
+/* Who counts as a member of each organisation (opens the member profile) */
+function orgMembers(o){
+  let ids;
+  if(o.id==="akatsuki")ids=AKA.map(m=>m.id);
+  else if(o.id==="kage")ids=KAGE.flatMap(k=>k.list.map(x=>x[0]));
+  else if(o.id==="beasts")ids=BEASTS.flatMap(b=>b[4].split("|"));
+  else ids=o.members();
+  return [...new Set(ids)].filter(id=>BY[id]);
+}
+/* Shinobi videos: put each one in shinobi/<character id>.mp4 */
+const shAvail={};
+function shKey(id){return "sh-"+id}
+async function checkShinobi(ids){
+  if(!HOSTED)return;
+  const todo=ids.filter(id=>shAvail[id]===undefined);if(!todo.length)return;
+  todo.forEach(id=>shAvail[id]=null);
+  let found=false;
+  await Promise.all(todo.map(async id=>{const ok=await fileThere("shinobi/"+id+".mp4");shAvail[id]=ok;
+    if(ok){const c=BY[id];THEATRE[shKey(id)]={title:c.name,jp:c.jp,file:"shinobi/"+id+".mp4",yt:null,group:"shinobi"};thAvail[shKey(id)]="mp4";found=true}}));
+  if(found){if(st.view==="orgs"&&st.org)renderOrgs();if(spot.id)renderSpot(spot.id,0)}
+}
+const PLAYSVG=`<svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg>`;
+function renderOrgIndex(){
+  const tiles=ORGS.map((o,i)=>{const bn=ORG_BANNERS[o.id],col=(bn&&bn.color)||ORG_COL[o.id]||"#333";
+    const n=o.id==="beasts"?"9 tailed beasts":o.id==="kage"?"5 villages":orgMembers(o).length+" members";
+    const vids=bn?[bn.vid,...(bn.more||[]).map(x=>x.vid)].filter(v=>thAvail[v]).length:0;
+    return `<button type="button" class="otile${i===0?" feat":""}" data-org="${o.id}" style="--oc:${col}${bn&&bn.bg?";background:"+bn.bg:""}">
+      ${bn?`<img class="oimg${bn.fit==="contain"?" fitc":""}" src="${bn.img}" alt="" loading="lazy"${bn.pos?` style="object-position:${bn.pos}"`:""} onerror="this.remove()">`:`<span class="obig" lang="ja">${o.seal}</span>`}
+      <span class="onum">${String(i+1).padStart(2,"0")}</span>
+      <span class="obody"><span class="otag">${esc(o.tag)}</span><span class="oname">${esc(o.name)} <span lang="ja">${o.jp}</span></span>
+        <span class="ometa"><span>${n}</span>${vids?`<span class="ov">▶ ${vids>1?vids+" videos":"Video"}</span>`:""}</span></span>
+      <span class="ogo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </button>`}).join("");
+  $("#orgBody").innerHTML=`<div class="intro" style="padding-inline:0"><div><h1>Organisations</h1><p>Secret groups, great leaders and legendary teams. Pick one to see its members. Tap a member for their profile and video.</p></div><div class="tally"><b>${ORGS.length}</b>organisations</div></div><div class="oidx">${tiles}</div>`;
+}
 $("#orgNav").innerHTML=ORGS.map(o=>`<button type="button" class="chip" data-org="${o.id}" aria-pressed="false">${esc(o.name)}</button>`).join("");
 function orgCard(c,extra){
   const ph=photo(c.id);
   return `<button type="button" class="card" data-id="${c.id}" style="--v:${vcol(c.village)}">
-    <span class="media">${ph?`<img src="${ph.src}" alt="" loading="lazy" style="object-position:${ph.pos}">`:`<span class="ph"><span lang="ja" style="font-size:${Math.min(30,Math.floor(120/[...c.jp].length))}px">${esc(c.jp)}</span><small>Photo coming soon</small></span>`}${extra&&extra.ring?`<span class="ring" lang="ja" title="Ring: ${esc(extra.rn)}">${extra.ring}</span>`:""}</span>
+    <span class="media">${ph?`<img src="${ph.src}" alt="" loading="lazy" style="object-position:${ph.pos}">`:`<span class="ph"><span lang="ja" style="font-size:${Math.min(30,Math.floor(120/[...c.jp].length))}px">${esc(c.jp)}</span><small>Photo coming soon</small></span>`}${extra&&extra.ring?`<span class="ring" lang="ja" title="Ring: ${esc(extra.rn)}">${extra.ring}</span>`:""}${shAvail[c.id]?`<span class="vbadge"><i>${PLAYSVG}</i>Video</span>`:""}</span>
     <span class="card-main">
       <span class="eyebrow"><span class="vdot"></span>${esc(c.village==="None"?"No village":c.village)} · ${esc(c.rank)}</span>
       <span class="cname">${esc(c.name)}</span>
@@ -1588,7 +1725,9 @@ function orgCard(c,extra){
 function who(x){const c=BY[x];if(!c)return `<span class="nolink">${esc(x)}</span>`;
   const ph=photo(c.id);return `<button type="button" class="kname" data-id="${c.id}"><span class="pj">${ph?`<img src="${ph.src}" alt="" style="object-position:${ph.pos}">`:esc(initial(c))}</span>${esc(c.name)}</button>`}
 function renderOrgs(){
-  const o=OBY[st.org]||ORGS[0];st.org=o.id;
+  $("#orgBar").hidden=!st.org;
+  if(!st.org||!OBY[st.org]){st.org=null;$("#orgBar").hidden=true;renderOrgIndex();return}
+  const o=OBY[st.org];checkShinobi(orgMembers(o));
   document.querySelectorAll("[data-org]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.org===o.id));
   let body="";
   if(o.id==="akatsuki"){
@@ -1634,8 +1773,92 @@ function renderOrgs(){
     if(bn.fit==="auto"){const decide=()=>{if(!im.naturalWidth)return;const b=$("#akaBanner");const r=(im.naturalWidth/im.naturalHeight)/(b.clientWidth/b.clientHeight);if(r<.8||r>1.25){b.classList.add("fitc");const g=document.createElement("img");g.src=bn.img;g.alt="";g.className="bgblur";g.setAttribute("aria-hidden","true");b.prepend(g)}};if(im.complete)decide();else im.addEventListener("load",decide,{once:true})}const fail=()=>{const b=$("#akaBanner");if(!b)return;if(thAvail[bn.vid]||(bn.more||[]).some(x=>thAvail[x.vid])){b.classList.add("noimg");b.querySelectorAll("img").forEach(x=>x.remove())}else b.remove()};if(im.complete&&!im.naturalWidth)fail();else im.addEventListener("error",fail,{once:true})},0);
   $("#orgBody").innerHTML=akaBanner+`<div class="ohero ${o.id==="akatsuki"?"aka":""}"><span class="oseal" lang="ja">${o.seal}</span><div><p class="kicker">${esc(o.tag)}</p><h2>${esc(o.name)} <span lang="ja">${o.jp}</span></h2><p>${esc(o.desc)}</p></div></div>${body}`;
 }
-$("#orgNav").addEventListener("click",e=>{const b=e.target.closest("[data-org]");if(!b)return;st.org=b.dataset.org;renderOrgs();setHash(viewHash());window.scrollTo({top:0,behavior:REDUCED?"auto":"smooth"})});
-$("#orgBody").addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(b)openSheet(b.dataset.id)});
+function goOrg(id){st.org=id;renderOrgs();setHash(viewHash());window.scrollTo({top:0,behavior:"auto"})}
+$("#orgNav").addEventListener("click",e=>{const b=e.target.closest("[data-org]");if(b)goOrg(b.dataset.org)});
+$("#orgBack").onclick=()=>goOrg(null);
+$("#orgBody").addEventListener("click",e=>{
+  const t=e.target.closest("[data-org]");if(t){goOrg(t.dataset.org);return}
+  const b=e.target.closest("[data-id]");if(!b)return;
+  const o=OBY[st.org];if(o&&orgMembers(o).includes(b.dataset.id)){openSpot(b.dataset.id,b);return}
+  openSheet(b.dataset.id)});
+
+/* ===================== MEMBER PROFILE (spotlight) ===================== */
+const spot={id:null,org:null,ret:null};
+function charJutsu(id){
+  const out=[];for(const k of Object.keys(JUTSU))for(const j of JUTSU[k])if(j[3].split(" ").includes(id))out.push([j[0],j[1]]);
+  const ord={S:0,A:1,B:2,C:3};out.sort((a,b)=>ord[a[1]]-ord[b[1]]);
+  const norm=n=>n.toLowerCase().replace(/\s*\(.*?\)\s*/g,"").trim();const have=new Set(out.map(x=>norm(x[0])));
+  BY[id].jutsu.forEach(n=>{if(!have.has(norm(n))){have.add(norm(n));out.push([n,""])}});
+  return out.slice(0,6);
+}
+function renderSpot(id,dir){
+  const o=OBY[spot.org],c=BY[id];if(!o||!c)return;
+  const ids=orgMembers(o),i=ids.indexOf(id),ph=photo(id),aka=o.id==="akatsuki"?AKA.find(m=>m.id===id):null;
+  const col=(ORG_BANNERS[o.id]&&ORG_BANNERS[o.id].color)||ORG_COL[o.id]||"#AE2A1F";
+  spot.id=id;const el=$("#spot");el.style.setProperty("--sc",col);
+  $("#spOrg").innerHTML=`<i lang="ja">${o.seal}</i>${esc(o.name)}`;
+  $("#spPos").textContent=`${String(i+1).padStart(2,"0")} / ${String(ids.length).padStart(2,"0")}`;
+  const bg=$("#spBg");if(ph){bg.src=ph.src;bg.hidden=false}else bg.hidden=true;
+  const js=charJutsu(id),top=js.find(j=>j[1]);const tier=top?top[1]:"";
+  const village=c.village==="None"?"No village":c.village+" Village";
+  const role=aka?aka.role:(c.groups.find(g=>g!==o.name)||c.rank);
+  const vid=shAvail[id];
+  const media=`<div class="sp-media">${ph?`<img class="mbg" src="${ph.src}" alt="" aria-hidden="true"><img class="mimg" src="${ph.src}" alt="Fan art of ${esc(c.name)}">`:`<span class="mph" lang="ja">${esc(c.jp)}</span>`}
+    ${aka&&aka.ring?`<span class="sp-ring" lang="ja" title="Ring: ${esc(aka.rn)}">${aka.ring}</span>`:""}
+    ${vid?`<button type="button" class="sp-play" data-playvid="${shKey(id)}"><i>${PLAYSVG}</i>Watch ${esc(c.name.split(" ")[0])}'s video</button>`:`<span class="sp-soon">${HOSTED?(vid===false?"Video coming soon":"Looking for a video..."):"Videos play on the live site"}</span>`}</div>`;
+  const facts=[["Village",esc(village)],["Rank",esc(c.rank)],["Clan",esc(c.clan)],
+    aka&&aka.pair&&BY[aka.pair]?["Partner",`<button type="button" data-spgo="${aka.pair}">${esc(BY[aka.pair].name)}</button>`]:null,
+    aka&&aka.ring?["Ring",`<span lang="ja">${aka.ring}</span> ${esc(aka.rn)}`]:null,
+    ["First appears",esc(c.era)]].filter(Boolean);
+  $("#spMain").innerHTML=media+`<div class="sp-info">
+    <p class="sp-kick">${esc(role)}${c.rogue?" · Missing-nin":""}</p>
+    <div class="sp-namerow"><h2 class="sp-name" id="spName">${esc(c.name)}</h2><span class="sp-jp" lang="ja">${esc(c.jp)}</span></div>
+    <div class="sp-stats">${tier?`<div class="sp-threat"><b class="${tier}">${tier}</b><span><strong>Threat level ${tier}</strong>${esc(TIERS[tier])}</span></div>`:""}</div>
+    <dl class="sp-facts">${facts.map(f=>`<div><dt>${f[0]}</dt><dd>${f[1]}</dd></div>`).join("")}</dl>
+    <p class="sp-bio">${esc(c.bio)}</p>
+    ${c.nat.length?`<div><p class="sp-h">Chakra natures</p><div class="sp-nat">${c.nat.map(n=>`<span style="--n:${ncol(n)}"><i></i>${n}</span>`).join("")}</div></div>`:""}
+    ${js.length?`<div><p class="sp-h">Signature jutsu</p><ul class="sp-jl">${js.map(j=>`<li><b class="${j[1]}">${j[1]||"·"}</b>${esc(j[0])}</li>`).join("")}</ul></div>`:""}
+    ${aka&&aka.fate?`<p class="sp-fate">${esc(aka.fate)}</p>`:""}
+    <div class="sp-acts"><button type="button" class="sp-btn" data-spfull="${id}">Open full dossier</button>${landOfChar(c)?`<button type="button" class="sp-btn" data-spmap="${id}">Show on map</button>`:""}</div>
+  </div>`;
+  $("#spStrip").innerHTML=ids.map(x=>{const p=photo(x),cc=BY[x];return `<button type="button" data-spgo="${x}" title="${esc(cc.name)}" aria-label="${esc(cc.name)}" aria-current="${x===id}">${p?`<img src="${p.src}" alt="" style="object-position:${p.pos}">`:esc(initial(cc))}${shAvail[x]?`<span class="sv"></span>`:""}</button>`}).join("");
+  const mi=$("#spMain .mimg");if(mi){const fit=()=>{if(mi.naturalWidth){const ar=Math.max(.72,Math.min(1.5,mi.naturalWidth/mi.naturalHeight));mi.closest(".sp-media").style.setProperty("--ar",ar.toFixed(3))}};mi.complete?fit():mi.addEventListener("load",fit,{once:true})}
+  const cur=$("#spStrip [aria-current=true]");if(cur)cur.scrollIntoView({block:"nearest",inline:"center",behavior:"auto"});
+  if(dir!==0&&!REDUCED){el.classList.remove("anim","back");void el.offsetWidth;el.classList.add("anim");if(dir<0)el.classList.add("back")}
+  thScope=ids.map(shKey);
+}
+function openSpot(id,from){
+  if(!st.org)return;
+  const el=$("#spot");spot.org=st.org;if(!spot.id)spot.ret=from||document.activeElement;
+  el.hidden=false;document.documentElement.classList.add("spot-open");
+  renderSpot(id,1);requestAnimationFrame(()=>el.classList.add("show"));
+  setHash("org-"+spot.org+"/"+id);checkShinobi(orgMembers(OBY[spot.org]));
+  $("#spClose").focus({preventScroll:true});
+}
+function closeSpot(quiet){
+  if(!spot.id)return;const el=$("#spot");spot.id=null;thScope=null;
+  el.classList.remove("show");document.documentElement.classList.remove("spot-open");
+  setTimeout(()=>{if(!spot.id)el.hidden=true},300);
+  if(!quiet){setHash(viewHash());if(spot.ret&&spot.ret.focus)spot.ret.focus({preventScroll:true})}
+}
+function stepSpot(d){const ids=orgMembers(OBY[spot.org]);const i=ids.indexOf(spot.id);const n=ids[(i+d+ids.length)%ids.length];renderSpot(n,d);setHash("org-"+spot.org+"/"+n)}
+$("#spClose").onclick=()=>closeSpot();
+(()=>{let x0=null,y0=0;const el=$("#spot");
+  el.addEventListener("touchstart",e=>{if(e.target.closest(".sp-strip"))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  el.addEventListener("touchend",e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)stepSpot(dx<0?1:-1)},{passive:true})})();
+$("#spPrev").onclick=()=>stepSpot(-1);$("#spNext").onclick=()=>stepSpot(1);
+$("#spot").addEventListener("click",e=>{
+  const g=e.target.closest("[data-spgo]");if(g){const ids=orgMembers(OBY[spot.org]);
+    if(ids.includes(g.dataset.spgo)){const d=ids.indexOf(g.dataset.spgo)>=ids.indexOf(spot.id)?1:-1;renderSpot(g.dataset.spgo,d);setHash("org-"+spot.org+"/"+g.dataset.spgo)}
+    else{closeSpot(true);openSheet(g.dataset.spgo)}return}
+  const f=e.target.closest("[data-spfull]");if(f){const id=f.dataset.spfull;closeSpot(true);openSheet(id);return}
+  const m=e.target.closest("[data-spmap]");if(m){const c=BY[m.dataset.spmap];closeSpot(true);setView("map");selectLand(landOfChar(c),{clan:clanKey(c),flash:c.id})}
+});
+document.addEventListener("keydown",e=>{if(!spot.id||thActive)return;
+  if(e.key==="Escape"){e.stopImmediatePropagation();closeSpot()}
+  else if(e.key==="ArrowRight"){e.preventDefault();stepSpot(1)}else if(e.key==="ArrowLeft"){e.preventDefault();stepSpot(-1)}
+  else if(e.key==="Tab"){const f=[...$("#spot").querySelectorAll("button:not([hidden])")].filter(b=>b.offsetParent);if(!f.length)return;
+    const a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}},true);
 
 /* ===================== TAILED BEASTS (organisation page) ===================== */
 const BEASTS=[
@@ -2011,35 +2234,7 @@ const ORG_BANNERS={akatsuki:{img:"img/akatsuki.webp",vid:"akatsuki",label:"Watch
   anbu:{img:"img/anbu.webp",vid:"anbu",label:"Watch the ANBU video",color:"#3E4A5C",fit:"contain",bg:"#ffffff"},
   root:{img:"img/root.webp",vid:"root",label:"Watch The Foundation video",color:"#7A4A1E",pos:"50% 6%"},
   sannin:{img:"img/sannin.webp",vid:"sannin",label:"Watch the Sannin video",color:"#5B3A86",pos:"50% 35%"}};
-/* Credits: special mentions. Each edit video goes in credits/<id>.mp4 (id = the character id). */
-const CREDITS=[
-  {id:"naruto",note:"The boy who never gave up, and the heart of the whole story.",by:""},
-  {id:"itachi",note:"Quiet, gifted and always one step ahead.",by:""},
-  {id:"jiraiya",note:"The Toad Sage who taught a generation of heroes.",by:""}
-].filter(x=>BY[x.id]);
-CREDITS.forEach(x=>{const c=BY[x.id];THEATRE["cr-"+x.id]={title:c.name,jp:c.jp,file:x.file||"credits/"+x.id+".mp4",yt:null,group:"credits"}});
-let thChecked=false;
-function renderCredits(){
-  const g=$("#crGrid");if(!g)return;$("#crTotal").textContent=CREDITS.length;
-  const play=`<svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg>`;
-  g.innerHTML=CREDITS.length?CREDITS.map((x,i)=>{const c=BY[x.id],k="cr-"+x.id,av=thAvail[k],ph=photo(c.id);
-    const pic=ph?`<img src="${ph.src}" alt="" loading="lazy" style="object-position:${ph.pos}">`:`<span class="ph"><span lang="ja" style="font-size:${Math.min(30,Math.floor(120/[...c.jp].length))}px">${esc(c.jp)}</span></span>`;
-    const no=`<span class="crno">${String(i+1).padStart(2,"0")}</span>`;
-    const status=!HOSTED?"Edit plays on the live site":!thChecked?"Checking for the edit...":"Edit coming soon";
-    return `<article class="card crcard" style="--v:${vcol(c.village)}">
-      ${av?`<button type="button" class="media crmedia" data-playvid="${k}" aria-label="Watch the ${esc(c.name)} edit">${pic}${no}<span class="crplay">${play}</span></button>`:`<span class="media crmedia">${pic}${no}</span>`}
-      <span class="card-main">
-        <span class="eyebrow"><span class="vdot"></span>Special mention · ${esc(c.village==="None"?"No village":c.village)}</span>
-        <span class="cname">${esc(c.name)}</span>
-        <span class="cjp" lang="ja">${esc(c.jp)}</span>
-        ${x.note?`<span class="crnote">${esc(x.note)}</span>`:""}
-        ${x.by?`<span class="crby">Edit by ${esc(x.by)}</span>`:""}
-        <span class="crrow">${av?`<button type="button" class="akaplay" data-playvid="${k}" style="--bc:${vcol(c.village)}"><i>${play}</i>Watch the edit</button>`:`<span class="tag">${status}</span>`}
-          <button type="button" class="crlink" data-open="${c.id}">Open entry</button></span>
-      </span>
-    </article>`}).join(""):`<p class="empty"><b>No special mentions yet</b>They will appear here soon.</p>`;
-}
-document.addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openSheet(b.dataset.open)});
+let thChecked=false,thScope=null,thActive=false;
 const HOSTED=!/claude/.test(location.hostname)&&!window.claude&&location.protocol!=="about:";
 const thAvail={};let ytPlayer=null,ytLoading=null,thCur=null,thKind=null,thTick=null,thVol=VOLUME_DEFAULT;
 function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)return ytLoading;
@@ -2048,17 +2243,17 @@ function loadYT(){if(window.YT&&YT.Player)return Promise.resolve();if(ytLoading)
 async function fileThere(f){try{const r=await fetch(f,{method:"HEAD",cache:"no-store"});return r.ok}catch(e){return false}}
 async function checkVideos(){if(!HOSTED)return;
   await Promise.all(Object.entries(THEATRE).map(async([k,v])=>{thAvail[k]=(await fileThere(v.file))?"mp4":(v.yt?"yt":null)}));thChecked=true;
-  $("#thBtn").hidden=!thAvail.opening&&!thAvail.akatsuki;renderTheatreTabs();if(st.view==="orgs")renderOrgs();renderCredits();
+  $("#thBtn").hidden=!thAvail.opening&&!thAvail.akatsuki;renderTheatreTabs();if(st.view==="orgs")renderOrgs();
   if(thAvail.opening==="yt")loadYT().catch(()=>{})}
 const fmt=t=>{t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")};
 function thMsg(t){const m=$("#thMsg");m.textContent=t;m.hidden=!t}
 function thState(playing){$("#thPlay").innerHTML=playing?`<svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>Pause`:`<svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg>Play`}
-function renderTheatreTabs(){const grp=(THEATRE[thCur]||{}).group||"main";const keys=Object.keys(THEATRE).filter(k=>thAvail[k]&&(THEATRE[k].group||"main")===grp);
+function renderTheatreTabs(){const grp=(THEATRE[thCur]||{}).group||"main";const keys=(grp==="shinobi"&&thScope?thScope:Object.keys(THEATRE)).filter(k=>thAvail[k]&&THEATRE[k]&&(THEATRE[k].group||"main")===grp);
   $("#thTabs").innerHTML=keys.length>1?keys.map(k=>`<button type="button" class="chip" data-th="${k}" aria-pressed="${k===thCur}">${esc(THEATRE[k].title)}</button>`).join(""):"";}
 function stopAll(){try{$("#thMp4").pause()}catch(e){}try{if(ytPlayer)ytPlayer.pauseVideo()}catch(e){}}
 async function openTheatre(key){
   key=key||(thAvail.opening?"opening":"akatsuki");const vid=THEATRE[key];if(!vid)return;
-  const th=$("#theatre");clearTimeout(thCloseT);const fresh=th.hidden||!th.classList.contains("on");
+  const th=$("#theatre");thActive=true;clearTimeout(thCloseT);const fresh=th.hidden||!th.classList.contains("on");
   if(fresh){th.hidden=false;th.classList.remove("open");void th.offsetWidth;th.classList.add("on")}
   stopAll();thCur=key;renderTheatreTabs();
   $("#thTitle").textContent=vid.title;$("#thJp").textContent=vid.jp;
@@ -2125,7 +2320,7 @@ function cancelWatch(){const v=$("#thMp4");try{if(v.cancelVideoFrameCallback&&vW
 window.addEventListener("resize",()=>{if(!$("#theatre").hidden)layoutVideo()});
 document.addEventListener("fullscreenchange",()=>setTimeout(layoutVideo,120));
 function closeTheatre(){
-  const th=$("#theatre");if(th.hidden)return;clearInterval(thTick);stopAll();vSampleT.forEach(clearTimeout);cancelWatch();
+  const th=$("#theatre");if(th.hidden)return;thActive=false;clearInterval(thTick);stopAll();vSampleT.forEach(clearTimeout);cancelWatch();
   try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document)}catch(e){}
   th.classList.remove("open");clearTimeout(thCloseT);thCloseT=setTimeout(()=>{th.classList.remove("on");thCloseT=setTimeout(()=>{th.hidden=true},350)},REDUCED?0:700);
   if(thReturn&&thReturn.focus)thReturn.focus({preventScroll:true});
@@ -2183,7 +2378,7 @@ if(!location.hash)playIntro(false);
 /* ===================== VIEWS + ROUTER ===================== */
 function setView(v,quiet){
   st.view=v;
-  $("#viewMap").hidden=v!=="map";$("#viewChars").hidden=v!=="chars";$("#viewOrgs").hidden=v!=="orgs";$("#viewJutsu").hidden=v!=="jutsu";$("#tabJutsu").setAttribute("aria-selected",v==="jutsu");$("#viewJoin").hidden=v!=="join";$("#viewCredits").hidden=v!=="credits";$("#tabCredits").setAttribute("aria-selected",v==="credits");if(v==="credits")renderCredits();$("#tabJoin").setAttribute("aria-selected",v==="join");if(v==="jutsu")renderJutsu();
+  $("#viewMap").hidden=v!=="map";$("#viewChars").hidden=v!=="chars";$("#viewOrgs").hidden=v!=="orgs";$("#viewJutsu").hidden=v!=="jutsu";$("#tabJutsu").setAttribute("aria-selected",v==="jutsu");$("#viewJoin").hidden=v!=="join";$("#tabJoin").setAttribute("aria-selected",v==="join");if(v==="jutsu")renderJutsu();
   $("#tabMap").setAttribute("aria-selected",v==="map");$("#tabChars").setAttribute("aria-selected",v==="chars");$("#tabOrgs").setAttribute("aria-selected",v==="orgs");
   if(v==="orgs")renderOrgs();
   if(v==="map"){resize();startLoop()}
@@ -2191,10 +2386,9 @@ function setView(v,quiet){
 }
 $("#tabMap").onclick=()=>setView("map");
 $("#tabChars").onclick=()=>setView("chars");
-$("#tabOrgs").onclick=()=>setView("orgs");
+$("#tabOrgs").onclick=()=>{st.org=null;setView("orgs")};
 $("#tabJutsu").onclick=()=>setView("jutsu");
 $("#tabJoin").onclick=()=>setView("join");
-$("#tabCredits").onclick=()=>setView("credits");
 $("#brandBtn").onclick=()=>{setView("map");selectLand(null)};
 $("#grid").addEventListener("click",e=>{const b=e.target.closest(".card");if(b)openSheet(b.dataset.id)});
 $("#q").addEventListener("input",e=>{st.q=e.target.value;renderChars()});
@@ -2212,9 +2406,10 @@ function route(){
   if(st.open)closeSheet(true);
   if(h==="characters"){setView("chars",true);return}
   if(h==="join"){setView("join",true);return}
-  if(h==="credits"){setView("credits",true);return}
   if(h==="jutsu"||h.startsWith("jutsu-")){const m={"jutsu-ninjutsu":"nin","jutsu-genjutsu":"gen","jutsu-taijutsu":"tai"}[h];if(m)st.jcat=m;setView("jutsu",true);return}
-  if(h==="organisations"||h.startsWith("org-")){if(OBY[h.slice(4)])st.org=h.slice(4);setView("orgs",true);return}
+  if(h==="organisations"||h.startsWith("org-")){const [og,mid]=h.slice(4).split("/");st.org=OBY[og]?og:null;
+    if(!(mid&&spot.id===mid))closeSpot(true);setView("orgs",true);if(mid&&st.org&&BY[mid]&&orgMembers(OBY[st.org]).includes(mid)&&spot.id!==mid)openSpot(mid);return}
+  closeSpot(true);
   setView("map",true);
   if(h.startsWith("land-")&&LBY[h.slice(5)]){selectLand(h.slice(5),{quiet:true,instant:!grid});return}
   if(h.startsWith("journey-")&&JBY[h.slice(8)]){selectJourney(h.slice(8),{quiet:true});return}
